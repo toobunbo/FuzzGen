@@ -1,0 +1,54 @@
+{
+  "monitor": {
+    "strategy": "patch_call",
+    "patch_target": "gradio.image_utils.httpx.get",
+    "target_arg_index": 0,
+    "target_arg_name": null,
+    "capture_what": "The URL argument passed to httpx.get() — the full attacker-controlled URL reaching the HTTP sink",
+    "additional_imports": [
+      "re"
+    ]
+  },
+  "oracle_check": {
+    "condition_description": "The URL passed to httpx.get() points to an internal/private IP, localhost, or cloud metadata endpoint, confirming SSRF exploitation with no validation blocking the request",
+    "trigger_patterns": [
+      "https?://169\\.254\\.169\\.254",
+      "https?://127\\.0\\.0\\.1",
+      "https?://localhost",
+      "https?://0\\.0\\.0\\.0",
+      "https?://10\\.",
+      "https?://192\\.168\\.",
+      "https?://172\\.(1[6-9]|2[0-9]|3[01])\\.",
+      "https?://\\[::1\\]",
+      "https?://metadata\\.google\\.internal",
+      "file://"
+    ],
+    "raise_type": "RuntimeError",
+    "raise_message_template": "PY/FULL-SSRF: httpx.get() called with attacker-controlled internal/metadata URL — captured={captured} pattern={matched_pattern}"
+  },
+  "fuzz_guidance": {
+    "seed_corpus": [
+      "http://169.254.169.254/latest/meta-data/",
+      "http://127.0.0.1:8080/admin",
+      "http://localhost/internal",
+      "http://192.168.1.1/",
+      "http://10.0.0.1/secret",
+      "http://metadata.google.internal/computeMetadata/v1/"
+    ],
+    "skip_condition": "not (isinstance(image_file, str) and ('http://' in image_file or 'https://' in image_file or 'file://' in image_file))"
+  },
+  "_meta": {
+    "function": "extract_svg_content",
+    "file": "gradio/image_utils.py",
+    "input_strategy": "direct_params",
+    "function_signature": "def extract_svg_content(image_file: str | Path)",
+    "tainted_params": [
+      {
+        "name": "image_file",
+        "index": 0,
+        "type": "str | Path"
+      }
+    ],
+    "model": "anthropic/claude-sonnet-4-6"
+  }
+}

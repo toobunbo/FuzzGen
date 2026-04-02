@@ -1,0 +1,31 @@
+{
+    "finding": {
+        "rule_id": "py/bad-tag-filter",
+        "message": "This regular expression does not match script end tags like </script >.",
+        "file": "superset/utils/core.py",
+        "start_line": 554,
+        "end_line": 554,
+        "repo_name": "superset",
+        "lang": "python",
+        "sarif_path": "/home/caterpie/ProjectFzz/VulnHunterX-main/output/python/superset/superset.sarif",
+        "tool": "CodeQL",
+        "function_name": "sanitize_svg_content"
+    },
+    "verdict": "True Positive",
+    "confidence": "High",
+    "reasoning": "The code contains a regex pattern that doesn't properly match script end tags like '</script >', which creates a potential XSS vulnerability. The data flows from external SVG content input through multiple regex substitutions without proper escaping or validation, and the output is returned to potentially render unsafe content in browsers.",
+    "answers": [
+        "The source of potentially dangerous data is the 'svg_content' parameter passed to the 'sanitize_svg_content' function. This function accepts raw SVG content string from external input (as indicated by the docstring mentioning 'Raw SVG content string').",
+        "Data flows through: 1) svg_content parameter (line 540) \u2192 2) content variable (line 548) after first regex substitution (line 548) \u2192 3) content variable (line 549) after second regex substitution (line 549) \u2192 4) content variable (line 550) after third regex substitution (line 550) \u2192 5) content variable (line 552) after fourth regex substitution (line 552) \u2192 6) content variable (line 553) after fifth regex substitution (line 553) \u2192 7) content variable (line 554) after sixth regex substitution (line 554) \u2192 8) returned value from function (line 555).",
+        "At each step, there is no additional validation, sanitization, or encoding applied beyond the regex substitutions. The regex patterns themselves attempt to remove dangerous content but may have incomplete matching patterns as flagged by CodeQL.",
+        "The sink is the returned sanitized SVG content string from the function. The data ends up being returned to the caller who might then use it in HTML rendering or storage without further processing.",
+        "If an attacker can control the svg_content parameter, they could potentially inject malicious script content that isn't properly filtered by the regex patterns, leading to XSS vulnerabilities when the sanitized content is rendered in a browser.",
+        "There are no clear mitigating factors in the broader context. The function appears to be part of core functionality for SVG sanitization and is not marked as test-only or dead code.",
+        "This code is not in a test file, debug path, or dead code. It's a core utility function in the main codebase that handles SVG sanitization."
+    ],
+    "context_needed": [],
+    "iterations": 1,
+    "model": "qwen3-coder-flash",
+    "timestamp": "2026-03-30T14:48:59.378912",
+    "elapsed_seconds": 6.916069269180298
+}

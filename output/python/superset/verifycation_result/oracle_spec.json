@@ -1,0 +1,46 @@
+{
+  "monitor": {
+    "strategy": "inspect_return",
+    "patch_target": null,
+    "target_arg_index": null,
+    "target_arg_name": null,
+    "capture_what": "return value of sanitize_svg_content — the sanitized SVG string",
+    "additional_imports": []
+  },
+  "oracle_check": {
+    "condition_description": "The returned sanitized SVG content still contains a script tag or script end tag variant (e.g., </script >) that should have been removed, indicating the regex filter was bypassed",
+    "trigger_patterns": [
+      "<script[\\s>]",
+      "</script\\s+>",
+      "<script\\b[^>]*>",
+      "javascript:"
+    ],
+    "raise_type": "RuntimeError",
+    "raise_message_template": "BAD_TAG_FILTER: Script tag survived SVG sanitization — captured={captured} pattern={matched_pattern}"
+  },
+  "fuzz_guidance": {
+    "seed_corpus": [
+      "<svg><script>alert(1)</script ></svg>",
+      "<svg><SCRIPT>alert(1)</SCRIPT ></svg>",
+      "<svg><script >alert(1)</script ></svg>",
+      "<svg><script\t>alert(1)</script\t></svg>",
+      "<svg><script>javascript:alert(1)</script  ></svg>",
+      "<svg xmlns='http://www.w3.org/2000/svg'><script>alert('xss')</script ></svg>"
+    ],
+    "skip_condition": "not svg_content or '<' not in svg_content"
+  },
+  "_meta": {
+    "function": "sanitize_svg_content",
+    "file": "superset/utils/core.py",
+    "input_strategy": "direct_params",
+    "function_signature": "def sanitize_svg_content(svg_content: str)",
+    "tainted_params": [
+      {
+        "name": "svg_content",
+        "index": 0,
+        "type": "str"
+      }
+    ],
+    "model": "anthropic/claude-sonnet-4-6"
+  }
+}

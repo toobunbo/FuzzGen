@@ -1,0 +1,261 @@
+[2026-04-01 15:28:57] This is codeql execute queries -J-Xmx1134M --verbosity=progress --logdir=/home/caterpie/ProjectFzz/VulnHunterX-main/output/python/gradio/database/log --evaluator-log-level=5 --warnings=show --qlconfig-file=/home/caterpie/ProjectFzz/VulnHunterX-main/qlconfig.yml --output=/home/caterpie/ProjectFzz/VulnHunterX-main/output/python/gradio/context/classes.bqrs -- /home/caterpie/ProjectFzz/VulnHunterX-main/output/python/gradio/database/db-python path:/home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python/classes.ql
+[2026-04-01 15:28:57] Calling plumbing command: codeql resolve queries --qlconfig-file=/home/caterpie/ProjectFzz/VulnHunterX-main/qlconfig.yml --format=json -- path:/home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python/classes.ql
+[2026-04-01 15:28:57] [PROGRESS] resolve queries> Recording pack reference vulnhunterx/python-tools at /home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python.
+[2026-04-01 15:28:57] Plumbing command codeql resolve queries completed:
+                      [
+                        "/home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python/classes.ql"
+                      ]
+[2026-04-01 15:28:57] Refusing fancy output: $CODEQL_ISATTY terminal indication is missing
+[2026-04-01 15:28:57] Creating executor with 1 threads.
+[2026-04-01 15:28:57] Calling plumbing command: codeql resolve extensions --qlconfig-file=/home/caterpie/ProjectFzz/VulnHunterX-main/qlconfig.yml path:/home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python/classes.ql
+[2026-04-01 15:28:57] Calling plumbing command: codeql resolve queries --qlconfig-file=/home/caterpie/ProjectFzz/VulnHunterX-main/qlconfig.yml --allow-library-packs --format startingpacks -- path:/home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python/classes.ql
+[2026-04-01 15:28:57] [PROGRESS] resolve queries> Recording pack reference vulnhunterx/python-tools at /home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python.
+[2026-04-01 15:28:57] Plumbing command codeql resolve queries completed:
+                      [
+                        "/home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python"
+                      ]
+[2026-04-01 15:28:57] Calling plumbing command: codeql resolve extensions-by-pack --qlconfig-file=/home/caterpie/ProjectFzz/VulnHunterX-main/qlconfig.yml -- /home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] vulnhunterx/python-tools: not 0.0.1 {root: vulnhunterx/python-tools@0.0.1}
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [DERIVATION] vulnhunterx/python-tools: 0.0.1 {vulnhunterx/python-tools: not 0.0.1 {root: vulnhunterx/python-tools@0.0.1}}
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] vulnhunterx/python-tools: * [*], codeql/python-all: not * [*] {dependency: vulnhunterx/python-tools@* [*] requires codeql/python-all@*}
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [DECISION 1] vulnhunterx/python-tools: 0.0.1
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [DERIVATION] codeql/python-all: * [*] {vulnhunterx/python-tools: * [*], codeql/python-all: not * [*] {dependency: vulnhunterx/python-tools@* [*] requires codeql/python-all@*}}
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/python-all: * [*], codeql/dataflow: not * [*] {dependency: codeql/python-all@* [*] requires codeql/dataflow@0.1.6}
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/python-all: * [*], codeql/mad: not * [*] {dependency: codeql/python-all@* [*] requires codeql/mad@0.2.6}
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/python-all: * [*], codeql/regex: not * [*] {dependency: codeql/python-all@* [*] requires codeql/regex@0.2.6}
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/python-all: * [*], codeql/tutorial: not * [*] {dependency: codeql/python-all@* [*] requires codeql/tutorial@0.2.6}
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/python-all: * [*], codeql/util: not * [*] {dependency: codeql/python-all@* [*] requires codeql/util@0.2.6}
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/python-all: * [*], codeql/yaml: not * [*] {dependency: codeql/python-all@* [*] requires codeql/yaml@0.2.6}
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [DECISION 2] codeql/python-all: 0.11.6
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [DERIVATION] codeql/yaml: * [*] {codeql/python-all: * [*], codeql/yaml: not * [*] {dependency: codeql/python-all@* [*] requires codeql/yaml@0.2.6}}
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [DERIVATION] codeql/util: * [*] {codeql/python-all: * [*], codeql/util: not * [*] {dependency: codeql/python-all@* [*] requires codeql/util@0.2.6}}
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [DERIVATION] codeql/tutorial: * [*] {codeql/python-all: * [*], codeql/tutorial: not * [*] {dependency: codeql/python-all@* [*] requires codeql/tutorial@0.2.6}}
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [DERIVATION] codeql/regex: * [*] {codeql/python-all: * [*], codeql/regex: not * [*] {dependency: codeql/python-all@* [*] requires codeql/regex@0.2.6}}
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [DERIVATION] codeql/mad: * [*] {codeql/python-all: * [*], codeql/mad: not * [*] {dependency: codeql/python-all@* [*] requires codeql/mad@0.2.6}}
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [DERIVATION] codeql/dataflow: * [*] {codeql/python-all: * [*], codeql/dataflow: not * [*] {dependency: codeql/python-all@* [*] requires codeql/dataflow@0.1.6}}
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/dataflow: * [*], codeql/ssa: not * [*] {dependency: codeql/dataflow@* [*] requires codeql/ssa@0.2.6}
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/dataflow: * [*], codeql/typetracking: not * [*] {dependency: codeql/dataflow@* [*] requires codeql/typetracking@0.2.6}
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/dataflow: * [*], codeql/util: not * [*] {dependency: codeql/dataflow@* [*] requires codeql/util@0.2.6}
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [DECISION 3] codeql/dataflow: 0.1.6
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [DERIVATION] codeql/typetracking: * [*] {codeql/dataflow: * [*], codeql/typetracking: not * [*] {dependency: codeql/dataflow@* [*] requires codeql/typetracking@0.2.6}}
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [DERIVATION] codeql/ssa: * [*] {codeql/dataflow: * [*], codeql/ssa: not * [*] {dependency: codeql/dataflow@* [*] requires codeql/ssa@0.2.6}}
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [DECISION 4] codeql/mad: 0.2.6
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/regex: * [*], codeql/util: not * [*] {dependency: codeql/regex@* [*] requires codeql/util@0.2.6}
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [DECISION 5] codeql/regex: 0.2.6
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/ssa: * [*], codeql/util: not * [*] {dependency: codeql/ssa@* [*] requires codeql/util@0.2.6}
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [DECISION 6] codeql/ssa: 0.2.6
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [DECISION 7] codeql/tutorial: 0.2.6
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/typetracking: * [*], codeql/util: not * [*] {dependency: codeql/typetracking@* [*] requires codeql/util@0.2.6}
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [DECISION 8] codeql/typetracking: 0.2.6
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [DECISION 9] codeql/util: 0.2.6
+[2026-04-01 15:28:57] [SPAMMY] resolve extensions-by-pack> [DECISION 10] codeql/yaml: 0.2.6
+[2026-04-01 15:28:57] [PROGRESS] resolve extensions-by-pack> Loading data extensions in /home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml.
+[2026-04-01 15:28:57] [DETAILS] resolve extensions-by-pack>   Found extension targeting codeql/python-all:sourceModel: 0 tuples.
+[2026-04-01 15:28:57] [DETAILS] resolve extensions-by-pack>   Found extension targeting codeql/python-all:sinkModel: 0 tuples.
+[2026-04-01 15:28:57] [DETAILS] resolve extensions-by-pack>   Found extension targeting codeql/python-all:summaryModel: 0 tuples.
+[2026-04-01 15:28:57] [DETAILS] resolve extensions-by-pack>   Found extension targeting codeql/python-all:neutralModel: 0 tuples.
+[2026-04-01 15:28:57] [DETAILS] resolve extensions-by-pack>   Found extension targeting codeql/python-all:typeModel: 0 tuples.
+[2026-04-01 15:28:57] [DETAILS] resolve extensions-by-pack>   Found extension targeting codeql/python-all:typeVariableModel: 0 tuples.
+[2026-04-01 15:28:58] [PROGRESS] resolve extensions-by-pack> Loading data extensions in /home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/subclass-capture/ALL.model.yml.
+[2026-04-01 15:28:58] [DETAILS] resolve extensions-by-pack>   Found extension targeting codeql/python-all:typeModel: 58275 tuples.
+[2026-04-01 15:28:58] Plumbing command codeql resolve extensions-by-pack completed:
+                      {
+                        "models" : [ ],
+                        "data" : {
+                          "/home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python" : [
+                            {
+                              "predicate" : "neutralModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml",
+                              "index" : 3
+                            },
+                            {
+                              "predicate" : "sinkModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml",
+                              "index" : 1
+                            },
+                            {
+                              "predicate" : "sourceModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml",
+                              "index" : 0
+                            },
+                            {
+                              "predicate" : "summaryModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml",
+                              "index" : 2
+                            },
+                            {
+                              "predicate" : "typeModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml",
+                              "index" : 4
+                            },
+                            {
+                              "predicate" : "typeVariableModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml",
+                              "index" : 5
+                            },
+                            {
+                              "predicate" : "typeModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/subclass-capture/ALL.model.yml",
+                              "index" : 0
+                            }
+                          ]
+                        },
+                        "threatModels" : { },
+                        "extensionPacks" : [ ]
+                      }
+[2026-04-01 15:28:58] Plumbing command codeql resolve extensions completed:
+                      {
+                        "models" : [ ],
+                        "data" : {
+                          "/home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python" : [
+                            {
+                              "predicate" : "neutralModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml",
+                              "index" : 3
+                            },
+                            {
+                              "predicate" : "sinkModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml",
+                              "index" : 1
+                            },
+                            {
+                              "predicate" : "sourceModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml",
+                              "index" : 0
+                            },
+                            {
+                              "predicate" : "summaryModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml",
+                              "index" : 2
+                            },
+                            {
+                              "predicate" : "typeModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml",
+                              "index" : 4
+                            },
+                            {
+                              "predicate" : "typeVariableModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml",
+                              "index" : 5
+                            },
+                            {
+                              "predicate" : "typeModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/subclass-capture/ALL.model.yml",
+                              "index" : 0
+                            }
+                          ]
+                        },
+                        "threatModels" : { },
+                        "extensionPacks" : [ ]
+                      }
+[2026-04-01 15:28:58] Calling plumbing command: codeql resolve library-path --qlconfig-file=/home/caterpie/ProjectFzz/VulnHunterX-main/qlconfig.yml --query=/home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python/classes.ql --format=json
+[2026-04-01 15:28:58] [DETAILS] resolve library-path> Resolving query at normalized path /home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python/classes.ql.
+[2026-04-01 15:28:58] [DETAILS] resolve library-path> Found enclosing pack 'vulnhunterx/python-tools' at /home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python.
+[2026-04-01 15:28:58] [DETAILS] resolve library-path> Adding compilation cache at /home/caterpie/.codeql/compile-cache.
+[2026-04-01 15:28:58] [DETAILS] resolve library-path> Resolving library dependencies from /home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python/qlpack.yml.
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [INCOMPATIBILITY] vulnhunterx/python-tools: not 0.0.1 {root: vulnhunterx/python-tools@0.0.1}
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [DERIVATION] vulnhunterx/python-tools: 0.0.1 {vulnhunterx/python-tools: not 0.0.1 {root: vulnhunterx/python-tools@0.0.1}}
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [INCOMPATIBILITY] vulnhunterx/python-tools: * [*], codeql/python-all: not * [*] {dependency: vulnhunterx/python-tools@* [*] requires codeql/python-all@*}
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [DECISION 1] vulnhunterx/python-tools: 0.0.1
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [DERIVATION] codeql/python-all: * [*] {vulnhunterx/python-tools: * [*], codeql/python-all: not * [*] {dependency: vulnhunterx/python-tools@* [*] requires codeql/python-all@*}}
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [INCOMPATIBILITY] codeql/python-all: * [*], codeql/dataflow: not * [*] {dependency: codeql/python-all@* [*] requires codeql/dataflow@0.1.6}
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [INCOMPATIBILITY] codeql/python-all: * [*], codeql/mad: not * [*] {dependency: codeql/python-all@* [*] requires codeql/mad@0.2.6}
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [INCOMPATIBILITY] codeql/python-all: * [*], codeql/regex: not * [*] {dependency: codeql/python-all@* [*] requires codeql/regex@0.2.6}
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [INCOMPATIBILITY] codeql/python-all: * [*], codeql/tutorial: not * [*] {dependency: codeql/python-all@* [*] requires codeql/tutorial@0.2.6}
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [INCOMPATIBILITY] codeql/python-all: * [*], codeql/util: not * [*] {dependency: codeql/python-all@* [*] requires codeql/util@0.2.6}
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [INCOMPATIBILITY] codeql/python-all: * [*], codeql/yaml: not * [*] {dependency: codeql/python-all@* [*] requires codeql/yaml@0.2.6}
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [DECISION 2] codeql/python-all: 0.11.6
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [DERIVATION] codeql/yaml: * [*] {codeql/python-all: * [*], codeql/yaml: not * [*] {dependency: codeql/python-all@* [*] requires codeql/yaml@0.2.6}}
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [DERIVATION] codeql/util: * [*] {codeql/python-all: * [*], codeql/util: not * [*] {dependency: codeql/python-all@* [*] requires codeql/util@0.2.6}}
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [DERIVATION] codeql/tutorial: * [*] {codeql/python-all: * [*], codeql/tutorial: not * [*] {dependency: codeql/python-all@* [*] requires codeql/tutorial@0.2.6}}
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [DERIVATION] codeql/regex: * [*] {codeql/python-all: * [*], codeql/regex: not * [*] {dependency: codeql/python-all@* [*] requires codeql/regex@0.2.6}}
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [DERIVATION] codeql/mad: * [*] {codeql/python-all: * [*], codeql/mad: not * [*] {dependency: codeql/python-all@* [*] requires codeql/mad@0.2.6}}
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [DERIVATION] codeql/dataflow: * [*] {codeql/python-all: * [*], codeql/dataflow: not * [*] {dependency: codeql/python-all@* [*] requires codeql/dataflow@0.1.6}}
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [INCOMPATIBILITY] codeql/dataflow: * [*], codeql/ssa: not * [*] {dependency: codeql/dataflow@* [*] requires codeql/ssa@0.2.6}
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [INCOMPATIBILITY] codeql/dataflow: * [*], codeql/typetracking: not * [*] {dependency: codeql/dataflow@* [*] requires codeql/typetracking@0.2.6}
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [INCOMPATIBILITY] codeql/dataflow: * [*], codeql/util: not * [*] {dependency: codeql/dataflow@* [*] requires codeql/util@0.2.6}
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [DECISION 3] codeql/dataflow: 0.1.6
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [DERIVATION] codeql/typetracking: * [*] {codeql/dataflow: * [*], codeql/typetracking: not * [*] {dependency: codeql/dataflow@* [*] requires codeql/typetracking@0.2.6}}
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [DERIVATION] codeql/ssa: * [*] {codeql/dataflow: * [*], codeql/ssa: not * [*] {dependency: codeql/dataflow@* [*] requires codeql/ssa@0.2.6}}
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [DECISION 4] codeql/mad: 0.2.6
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [INCOMPATIBILITY] codeql/regex: * [*], codeql/util: not * [*] {dependency: codeql/regex@* [*] requires codeql/util@0.2.6}
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [DECISION 5] codeql/regex: 0.2.6
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [INCOMPATIBILITY] codeql/ssa: * [*], codeql/util: not * [*] {dependency: codeql/ssa@* [*] requires codeql/util@0.2.6}
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [DECISION 6] codeql/ssa: 0.2.6
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [DECISION 7] codeql/tutorial: 0.2.6
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [INCOMPATIBILITY] codeql/typetracking: * [*], codeql/util: not * [*] {dependency: codeql/typetracking@* [*] requires codeql/util@0.2.6}
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [DECISION 8] codeql/typetracking: 0.2.6
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [DECISION 9] codeql/util: 0.2.6
+[2026-04-01 15:28:58] [SPAMMY] resolve library-path> [DECISION 10] codeql/yaml: 0.2.6
+[2026-04-01 15:28:58] [DETAILS] resolve library-path> QL pack dependencies for /home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python resolved OK.
+[2026-04-01 15:28:58] [DETAILS] resolve library-path> Found dbscheme through QL packs: /home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmlecode.python.dbscheme.
+[2026-04-01 15:28:58] Plumbing command codeql resolve library-path completed:
+                      {
+                        "libraryPath" : [
+                          "/home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python",
+                          "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6",
+                          "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/dataflow/0.1.6",
+                          "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/mad/0.2.6",
+                          "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/regex/0.2.6",
+                          "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/ssa/0.2.6",
+                          "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/tutorial/0.2.6",
+                          "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/typetracking/0.2.6",
+                          "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/util/0.2.6",
+                          "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/yaml/0.2.6"
+                        ],
+                        "dbscheme" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmlecode.python.dbscheme",
+                        "compilationCache" : [
+                          "/home/caterpie/.codeql/compile-cache"
+                        ],
+                        "relativeName" : "vulnhunterx/python-tools/classes.ql",
+                        "qlPackName" : "vulnhunterx/python-tools"
+                      }
+[2026-04-01 15:28:58] [PROGRESS] execute queries> Compiling query plan for /home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python/classes.ql.
+[2026-04-01 15:28:58] [DETAILS] execute queries> Resolving imports for /home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python/classes.ql.
+[2026-04-01 15:28:59] Resolved file set for /home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python/classes.ql hashes to a923f674acdb18aac4fc5449e486a377b009ebaf.
+[2026-04-01 15:28:59] [DETAILS] execute queries> Compilation cache hit for /home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python/classes.ql.
+[2026-04-01 15:28:59] [SPAMMY] execute queries> No database upgrade/downgrade needed for /home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python/classes.ql
+[2026-04-01 15:28:59] [PROGRESS] execute queries> [1/1] Found in cache: /home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python/classes.ql.
+[2026-04-01 15:28:59] [PROGRESS] execute queries> Starting evaluation of vulnhunterx/python-tools/classes.ql.
+[2026-04-01 15:28:59] Starting evaluation of /home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python/classes.ql
+[2026-04-01 15:28:59] (0s) Start query execution
+[2026-04-01 15:28:59] (0s) Beginning execution of classes.ql
+[2026-04-01 15:28:59] (0s)  >>> Created relation py_strs/3@8b09783d with 272257 rows and digest 25a6fcuqgdqiri952nf6e111ud7.
+[2026-04-01 15:28:59] (0s) Starting to evaluate predicate py_strs_120#join_rhs/3@bc532fas
+[2026-04-01 15:28:59] (0s)  >>> Created relation py_strs_120#join_rhs/3@bc532fas with 272257 rows and digest 8ba3bcdqg0rr11j068fk8lo4tge.
+[2026-04-01 15:28:59] (0s)  >>> Created relation py_Classes/2@6d165em4 with 1700 rows and digest bb9376ocq7ic6mrr353d8c9i7f3.
+[2026-04-01 15:28:59] (0s)  >>> Created relation py_scope_location/2@80170142 with 17839 rows and digest e27018mhcqftn1qfibrjs3mm119.
+[2026-04-01 15:28:59] (0s) Starting to evaluate predicate py_scope_location_10#join_rhs/2@817359jp
+[2026-04-01 15:28:59] (0s)  >>> Created relation py_scope_location_10#join_rhs/2@817359jp with 17839 rows and digest 9cddfegnsd6nmbfqgbpd8thmbb8.
+[2026-04-01 15:28:59] (0s) Starting to evaluate predicate Scope::Scope.getLocation/0#dispred#0883d983/2@70eb66eu
+[2026-04-01 15:28:59] (0s)  >>> Created relation Scope::Scope.getLocation/0#dispred#0883d983/2@70eb66eu with 1700 rows and digest 90078bvb0r5fi4crs1lb76bialc.
+[2026-04-01 15:28:59] (0s) Starting to evaluate predicate m#Files::Location.getEndLine/0#dispred#20e291bf#bf/1@d0ed21nt
+[2026-04-01 15:28:59] (0s)  >>> Created relation m#Files::Location.getEndLine/0#dispred#20e291bf#bf/1@d0ed21nt with 1700 rows and digest 84d08bqu585rrak63r1udl1b9df.
+[2026-04-01 15:29:00] (0s)  >>> Created relation locations_ast/6@7c54c81q with 835536 rows and digest 96c6b5s5ckuoa3tm2r59echh6s6.
+[2026-04-01 15:29:00] (0s)  >>> Created relation locations_default/6@c6ff18jn with 33856 rows and digest 9b8605lupgoef214q36304lpm1c.
+[2026-04-01 15:29:00] (0s) Starting to evaluate predicate Files::Location.getEndLine/0#dispred#20e291bf#bf/2@6f5dcb0l
+[2026-04-01 15:29:00] (0s)  >>> Created relation Files::Location.getEndLine/0#dispred#20e291bf#bf/2@6f5dcb0l with 1700 rows and digest d27aea2ckc1f984vf3rgg2t3g9e.
+[2026-04-01 15:29:00] (0s) Starting to evaluate predicate Files::Location.getStartLine/0#dispred#a15d2f9d#bf/2@c0e06aeu
+[2026-04-01 15:29:00] (0s)  >>> Created relation Files::Location.getStartLine/0#dispred#a15d2f9d#bf/2@c0e06aeu with 1700 rows and digest 73aff1trlj4fd76h45lqldsf014.
+[2026-04-01 15:29:00] (0s)  >>> Created relation files/2@1cd093p2 with 1028 rows and digest d09eb17p77eabin3rkjij14o7qd.
+[2026-04-01 15:29:00] (0s)  >>> Created relation sourceLocationPrefix/1@0b66e6fd with 1 rows and digest 6b4bd4rrqv1tmkommht7r8n054a.
+[2026-04-01 15:29:00] (0s)  >>> Created relation py_module_path/2@4d0b8fv6 with 1455 rows and digest 4eb64emd3iic09fv9882nh45sn6.
+[2026-04-01 15:29:00] (0s) Starting to evaluate predicate Files::Location.getFile/0#dispred#fab46add#bf/2@623e3boh
+[2026-04-01 15:29:00] (0s)  >>> Created relation Files::Location.getFile/0#dispred#fab46add#bf/2@623e3boh with 1700 rows and digest 040867eutbicpl1nmtvagb5t5l1.
+[2026-04-01 15:29:00] (0s) Starting to evaluate predicate project#Files::Location.getFile/0#dispred#fab46add#bf/1@b620c160
+[2026-04-01 15:29:00] (0s)  >>> Created relation project#Files::Location.getFile/0#dispred#fab46add#bf/1@b620c160 with 362 rows and digest 789a2f100oj69n471qq8q7kss86.
+[2026-04-01 15:29:00] (0s) Starting to evaluate predicate Files::Impl::Container.getRelativePath/0#dispred#21f7a09a#bf/2@2a8f87c5
+[2026-04-01 15:29:00] (0s)  >>> Created relation Files::Impl::Container.getRelativePath/0#dispred#21f7a09a#bf/2@2a8f87c5 with 185 rows and digest 9896053qr23vbo01g554llhfuc4.
+[2026-04-01 15:29:00] (0s) Starting to evaluate predicate #select#query/4@735e7743
+[2026-04-01 15:29:00] (0s)  >>> Created relation #select#query/4@735e7743 with 536 rows and digest f458a92gl4voi8gmbbhfcnngqp2.
+[2026-04-01 15:29:00] (0s) Query done
+[2026-04-01 15:29:00] (0s) Sequence stamp origin is -5930181013656331126
+[2026-04-01 15:29:00] (0s) Pausing evaluation to sync to disk at sequence stamp o+0
+[2026-04-01 15:29:00] (0s) Unpausing evaluation
+[2026-04-01 15:29:00] Evaluation of /home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python/classes.ql produced BQRS results.
+[2026-04-01 15:29:00] [PROGRESS] execute queries> [1/1 eval 453ms] Evaluation done; writing results to /home/caterpie/ProjectFzz/VulnHunterX-main/output/python/gradio/context/classes.bqrs.
+[2026-04-01 15:29:00] [PROGRESS] execute queries> Shutting down query evaluator.
+[2026-04-01 15:29:00] Pausing evaluation to close the cache at sequence stamp o+1
+[2026-04-01 15:29:00] The disk cache is freshly trimmed; leave it be.
+[2026-04-01 15:29:00] Unpausing evaluation
+[2026-04-01 15:29:00] Exiting with code 0

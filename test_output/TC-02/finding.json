@@ -1,0 +1,17 @@
+{
+  "finding": {
+    "repo_name": "legacy-crm",
+    "lang": "python",
+    "rule_id": "py/sql-injection",
+    "function_name": "execute_query",
+    "file": "app/db/query.py",
+    "message": "Unsanitized user input is interpolated directly into a SQL string via f-string.",
+    "answers": [
+      "user_input",
+      "user_input is concatenated into query string via f-string interpolation.",
+      "No parameterized query or escaping is applied before cursor.execute().",
+      "cursor.execute() is the sink receiving the tainted SQL string.",
+      "Attacker injects SQL payload such as ' OR 1=1-- to manipulate query logic."
+    ]
+  }
+}

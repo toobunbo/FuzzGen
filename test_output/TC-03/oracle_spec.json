@@ -1,0 +1,39 @@
+{
+  "oracle_type": "inspect_return",
+  "attack_scenario": "Attacker supplies a filename with '../' to cause directory traversal via os.path.join() and opens the resulting path.",
+  "tainted_params": [
+    {
+      "name": "filename",
+      "index": -1,
+      "type": "str"
+    }
+  ],
+  "monitor": {
+    "strategy": "inspect_return",
+    "patch_target": null,
+    "capture_what": "os.path.join() call with dangerous path or open() called with potentially traversed path",
+    "additional_imports": []
+  },
+  "oracle_check": {
+    "condition_description": "Check if the return value from read_user_file indicates a directory traversal attempt.",
+    "trigger_patterns": [
+      ".* '../' .*",
+      "os.path.join\\(\\) returns path starting with /"
+    ],
+    "raise_type": "RuntimeError",
+    "raise_message_template": " dangerous path detected: {path}"
+  },
+  "expected_exceptions": [
+    "FileNotFoundError",
+    "IsADirectoryError"
+  ],
+  "cleanup_needed": false,
+  "cleanup_description": null,
+  "_meta": {
+    "function": "read_user_file",
+    "file": "server/file_handler.py",
+    "input_strategy": "direct_params",
+    "function_signature": "def read_user_file(filename: str)",
+    "model": "ollama/deepseek-r1:7b"
+  }
+}

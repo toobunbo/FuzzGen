@@ -1,0 +1,360 @@
+2026-04-01 17:19:30,686 [INFO] [Stage2] function  : extract_svg_content
+2026-04-01 17:19:30,687 [INFO] [Stage2] rule_id   : py/full-ssrf
+2026-04-01 17:19:30,687 [INFO] [Stage2] strategy  : direct_params / patch_call
+2026-04-01 17:19:30,691 [INFO] [Stage2] skeleton built, calling anthropic/claude-sonnet-4-6 ...
+2026-04-01 17:19:30,692 [DEBUG] 
+========== LLM REQUEST ==========
+2026-04-01 17:19:30,692 [DEBUG] [SYSTEM PROMPT]
+You are an expert fuzzing engineer specializing in Python security testing with Atheris.
+
+## Your Task
+
+You will receive a PARTIAL harness Python script with a skeleton already filled in.
+Your job is to complete the body of the `TestOneInput` function where it says `# [FILL HERE]`.
+
+CRITICAL INSTRUCTION: You MUST output the ENTIRE, COMPLETE Python script from top to bottom.
+
+- Do NOT strip or omit the top `# AUTO-GENERATED ATHERIS HARNESS SKELETON` comment block.
+- Always include the exact imports and the `with atheris.instrument_imports():` block from the skeleton.
+- Keep the `# === FIXED CONTRACTS (DO NOT MODIFY) ===` and `# === CONTEXT FOR REASONING ===` sections intact exactly as provided in the skeleton.
+- Output the COMPLETE final Python script, no markdown, no prose, do not truncate anything.
+
+## What to Fill in Inside TestOneInput()
+
+### 1. FDP Block — Generate Fuzz Inputs
+
+`fdp = atheris.FuzzedDataProvider(data)` is already declared — do not redeclare it.
+
+Read `_TAINTED_PARAMS` to know the param names and types.
+Compute `param_count = max(len(_TAINTED_PARAMS), 1)`.
+Map each param by type to a named variable:
+
+- `str`, `str | Path`, `Optional[str]` -> `fdp.ConsumeUnicodeNoSurrogates(len(data) // param_count)`
+- `bytes`, `Optional[bytes]` -> `fdp.ConsumeBytes(len(data) // param_count)`
+- `int` -> `fdp.ConsumeInt(4)`
+- `float` -> `fdp.ConsumeFloat()`
+- `bool` -> `fdp.ConsumeBool()`
+- `list` -> `[]`
+- `dict` -> `{}`
+- Union types -> use the first/primary type in the union
+
+NEVER use `ConsumeIntInRange` to determine buffer length — it consumes bytes from the buffer, reducing data available for the actual param.
+
+ALWAYS assign each `Consume*` result to a named variable before passing to the function.
+
+For non-tainted params the function still requires, use safe minimal defaults (`""`, `0`, `False`, `None` — whichever fits the type).
+
+### 2. Function Call Block
+
+Call the target function using the variables generated in step 1.
+
+Do NOT wrap in a bare `except Exception: pass` here — exception handling belongs inside the oracle block per strategy below.
+
+### 3. Oracle Check Block — Implement Based on `monitor_strategy` in CONTEXT
+
+#### "inspect_return"
+
+```python
+try:
+    result = <function_call>
+    for pattern in _COMPILED_PATTERNS:
+        if pattern.search(str(result)):
+            raise RuntimeError(_RAISE_MESSAGE)
+except RuntimeError:
+    raise
+except Exception:
+    pass
+```
+
+#### "patch_call"
+
+Read `patch_target` from the CONTEXT comment — use it verbatim in the `patch()` call.
+Read `capture_what` from the CONTEXT comment — it describes which argument to extract.
+
+```python
+mock_response = MagicMock()
+mock_response.status_code = 200
+mock_response.text = ""
+mock_response.content = b""
+try:
+    with patch("<patch_target>", return_value=mock_response) as mock_fn:
+        try:
+            <function_call>
+        except RuntimeError:
+            raise
+        except Exception:
+            pass
+        for call in mock_fn.call_args_list:
+            captured = (
+                str(call.args[0]) if call.args
+                else str(
+                    call.kwargs.get("url")
+                    or call.kwargs.get("path")
+                    or call.kwargs.get("cmd")
+                    or call.kwargs.get("sql")
+                    or ""
+                )
+            )
+            for pattern in _COMPILED_PATTERNS:
+                if pattern.search(captured):
+                    raise RuntimeError(_RAISE_MESSAGE)
+except RuntimeError:
+    raise
+except Exception:
+    pass
+```
+
+#### "catch_exception"
+
+Read `condition_desc` from the CONTEXT comment to identify the expected exception type.
+
+```python
+try:
+    <function_call>
+except RuntimeError:
+    raise
+except <ExceptionType matching condition_desc>:
+    raise RuntimeError(_RAISE_MESSAGE)
+except Exception:
+    pass
+```
+
+## Key Rules
+
+- NEVER reference `_TRIGGER_PATTERNS` — the contract variable is `_COMPILED_PATTERNS`. Each element is a pre-compiled `re.Pattern` — call `pattern.search(string)` directly, do NOT pass it to `re.search()` or `re.compile()` again.
+- NEVER hardcode new regex patterns — always iterate `_COMPILED_PATTERNS`.
+- NEVER paraphrase the raise message — always use `_RAISE_MESSAGE` directly.
+- NEVER use `atheris.instrument_func` decorator on `TestOneInput`.
+- NEVER import `json` or call `json.loads` — all contracts are already native Python objects.
+- Keep harness minimal — no print, no logging, no assertions outside oracle block.
+
+2026-04-01 17:19:30,692 [DEBUG] [USER PROMPT]
+Complete the following partial Atheris harness by filling in the TestOneInput body.
+Output the complete Python script only. No markdown, no explanation.
+
+# AUTO-GENERATED ATHERIS HARNESS SKELETON
+# rule_id  : py/full-ssrf
+# function : extract_svg_content
+# file     : gradio/image_utils.py
+# ================================================================
+import atheris
+import sys
+import re
+
+from unittest.mock import patch, MagicMock
+
+with atheris.instrument_imports():
+
+    from gradio.image_utils import extract_svg_content
+
+
+# === FIXED CONTRACTS (DO NOT MODIFY) ===
+_COMPILED_PATTERNS = [
+
+    re.compile("169\\.254\\.169\\.254", re.IGNORECASE),
+
+    re.compile("(?:^|[/@])127\\.0\\.0\\.1", re.IGNORECASE),
+
+    re.compile("(?:^|[/@])localhost", re.IGNORECASE),
+
+    re.compile("(?:^|[/@])10\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}", re.IGNORECASE),
+
+    re.compile("(?:^|[/@])192\\.168\\.\\d{1,3}\\.\\d{1,3}", re.IGNORECASE),
+
+    re.compile("(?:^|[/@])172\\.(?:1[6-9]|2\\d|3[01])\\.\\d{1,3}\\.\\d{1,3}", re.IGNORECASE),
+
+    re.compile("^file://", re.IGNORECASE),
+
+    re.compile("(?:^|[/@])0\\.0\\.0\\.0", re.IGNORECASE),
+
+]
+_RAISE_MESSAGE  = "PY/FULL-SSRF: Attacker-controlled URL reached httpx.get() with no SSRF protection \u2014 internal/metadata endpoint accessible"
+_TAINTED_PARAMS = [{"index": 0, "name": "image_file", "type": "str | Path"}]
+# ========================================
+
+# === CONTEXT FOR REASONING ===
+# monitor_strategy  : patch_call
+# patch_target      : gradio.image_utils.httpx.get
+# input_strategy    : direct_params
+# function_signature: def extract_svg_content(image_file: str | Path)
+# condition_desc    : The URL argument reaching httpx.get() contains an internal/private IP address, cloud metadata endpoint (169.254.169.254), localhost, or file:// scheme — confirming SSRF exploitation with no sanitization
+# capture_what      : The URL argument passed to httpx.get() — confirms SSRF when it contains internal IPs, cloud metadata endpoints, or localhost addresses
+# ========================================
+
+
+# === PATCH_CALL SKELETON ===
+# 1. Generate fuzz inputs from FDP — use ConsumeUnicodeNoSurrogates for str,
+#    ConsumeBytes for bytes. Split buffer by param count, not ConsumeIntInRange.
+# 2. Setup mock return value appropriate for the target function.
+# 3. Patch `gradio.image_utils.httpx.get` and call `extract_svg_content`.
+# 4. After the call, iterate mock_get.call_args_list.
+#    Extract the URL/path/cmd argument (check both call.args and call.kwargs).
+#    Run each pattern in _COMPILED_PATTERNS against the captured argument.
+#    On match → raise RuntimeError(_RAISE_MESSAGE).
+# 5. except RuntimeError: raise  — never swallow oracle raises.
+#    except Exception: pass       — swallow only non-oracle exceptions.
+
+
+def TestOneInput(data):
+    fdp = atheris.FuzzedDataProvider(data)
+    # [FILL HERE — follow the skeleton above]
+
+atheris.Setup(sys.argv, TestOneInput)
+atheris.Fuzz()
+
+
+2026-04-01 17:19:30,692 [DEBUG] 
+
+2026-04-01 17:19:30,692 [DEBUG] [92mRequest to litellm:[0m
+2026-04-01 17:19:30,692 [DEBUG] [92mlitellm.completion(model='anthropic/claude-sonnet-4-6', messages=[{'role': 'system', 'content': 'You are an expert fuzzing engineer specializing in Python security testing with Atheris.\n\n## Your Task\n\nYou will receive a PARTIAL harness Python script with a skeleton already filled in.\nYour job is to complete the body of the `TestOneInput` function where it says `# [FILL HERE]`.\n\nCRITICAL INSTRUCTION: You MUST output the ENTIRE, COMPLETE Python script from top to bottom.\n\n- Do NOT strip or omit the top `# AUTO-GENERATED ATHERIS HARNESS SKELETON` comment block.\n- Always include the exact imports and the `with atheris.instrument_imports():` block from the skeleton.\n- Keep the `# === FIXED CONTRACTS (DO NOT MODIFY) ===` and `# === CONTEXT FOR REASONING ===` sections intact exactly as provided in the skeleton.\n- Output the COMPLETE final Python script, no markdown, no prose, do not truncate anything.\n\n## What to Fill in Inside TestOneInput()\n\n### 1. FDP Block — Generate Fuzz Inputs\n\n`fdp = atheris.FuzzedDataProvider(data)` is already declared — do not redeclare it.\n\nRead `_TAINTED_PARAMS` to know the param names and types.\nCompute `param_count = max(len(_TAINTED_PARAMS), 1)`.\nMap each param by type to a named variable:\n\n- `str`, `str | Path`, `Optional[str]` -> `fdp.ConsumeUnicodeNoSurrogates(len(data) // param_count)`\n- `bytes`, `Optional[bytes]` -> `fdp.ConsumeBytes(len(data) // param_count)`\n- `int` -> `fdp.ConsumeInt(4)`\n- `float` -> `fdp.ConsumeFloat()`\n- `bool` -> `fdp.ConsumeBool()`\n- `list` -> `[]`\n- `dict` -> `{}`\n- Union types -> use the first/primary type in the union\n\nNEVER use `ConsumeIntInRange` to determine buffer length — it consumes bytes from the buffer, reducing data available for the actual param.\n\nALWAYS assign each `Consume*` result to a named variable before passing to the function.\n\nFor non-tainted params the function still requires, use safe minimal defaults (`""`, `0`, `False`, `None` — whichever fits the type).\n\n### 2. Function Call Block\n\nCall the target function using the variables generated in step 1.\n\nDo NOT wrap in a bare `except Exception: pass` here — exception handling belongs inside the oracle block per strategy below.\n\n### 3. Oracle Check Block — Implement Based on `monitor_strategy` in CONTEXT\n\n#### "inspect_return"\n\n```python\ntry:\n    result = <function_call>\n    for pattern in _COMPILED_PATTERNS:\n        if pattern.search(str(result)):\n            raise RuntimeError(_RAISE_MESSAGE)\nexcept RuntimeError:\n    raise\nexcept Exception:\n    pass\n```\n\n#### "patch_call"\n\nRead `patch_target` from the CONTEXT comment — use it verbatim in the `patch()` call.\nRead `capture_what` from the CONTEXT comment — it describes which argument to extract.\n\n```python\nmock_response = MagicMock()\nmock_response.status_code = 200\nmock_response.text = ""\nmock_response.content = b""\ntry:\n    with patch("<patch_target>", return_value=mock_response) as mock_fn:\n        try:\n            <function_call>\n        except RuntimeError:\n            raise\n        except Exception:\n            pass\n        for call in mock_fn.call_args_list:\n            captured = (\n                str(call.args[0]) if call.args\n                else str(\n                    call.kwargs.get("url")\n                    or call.kwargs.get("path")\n                    or call.kwargs.get("cmd")\n                    or call.kwargs.get("sql")\n                    or ""\n                )\n            )\n            for pattern in _COMPILED_PATTERNS:\n                if pattern.search(captured):\n                    raise RuntimeError(_RAISE_MESSAGE)\nexcept RuntimeError:\n    raise\nexcept Exception:\n    pass\n```\n\n#### "catch_exception"\n\nRead `condition_desc` from the CONTEXT comment to identify the expected exception type.\n\n```python\ntry:\n    <function_call>\nexcept RuntimeError:\n    raise\nexcept <ExceptionType matching condition_desc>:\n    raise RuntimeError(_RAISE_MESSAGE)\nexcept Exception:\n    pass\n```\n\n## Key Rules\n\n- NEVER reference `_TRIGGER_PATTERNS` — the contract variable is `_COMPILED_PATTERNS`. Each element is a pre-compiled `re.Pattern` — call `pattern.search(string)` directly, do NOT pass it to `re.search()` or `re.compile()` again.\n- NEVER hardcode new regex patterns — always iterate `_COMPILED_PATTERNS`.\n- NEVER paraphrase the raise message — always use `_RAISE_MESSAGE` directly.\n- NEVER use `atheris.instrument_func` decorator on `TestOneInput`.\n- NEVER import `json` or call `json.loads` — all contracts are already native Python objects.\n- Keep harness minimal — no print, no logging, no assertions outside oracle block.'}, {'role': 'user', 'content': 'Complete the following partial Atheris harness by filling in the TestOneInput body.\nOutput the complete Python script only. No markdown, no explanation.\n\n# AUTO-GENERATED ATHERIS HARNESS SKELETON\n# rule_id  : py/full-ssrf\n# function : extract_svg_content\n# file     : gradio/image_utils.py\n# ================================================================\nimport atheris\nimport sys\nimport re\n\nfrom unittest.mock import patch, MagicMock\n\nwith atheris.instrument_imports():\n\n    from gradio.image_utils import extract_svg_content\n\n\n# === FIXED CONTRACTS (DO NOT MODIFY) ===\n_COMPILED_PATTERNS = [\n\n    re.compile("169\\\\.254\\\\.169\\\\.254", re.IGNORECASE),\n\n    re.compile("(?:^|[/@])127\\\\.0\\\\.0\\\\.1", re.IGNORECASE),\n\n    re.compile("(?:^|[/@])localhost", re.IGNORECASE),\n\n    re.compile("(?:^|[/@])10\\\\.\\\\d{1,3}\\\\.\\\\d{1,3}\\\\.\\\\d{1,3}", re.IGNORECASE),\n\n    re.compile("(?:^|[/@])192\\\\.168\\\\.\\\\d{1,3}\\\\.\\\\d{1,3}", re.IGNORECASE),\n\n    re.compile("(?:^|[/@])172\\\\.(?:1[6-9]|2\\\\d|3[01])\\\\.\\\\d{1,3}\\\\.\\\\d{1,3}", re.IGNORECASE),\n\n    re.compile("^file://", re.IGNORECASE),\n\n    re.compile("(?:^|[/@])0\\\\.0\\\\.0\\\\.0", re.IGNORECASE),\n\n]\n_RAISE_MESSAGE  = "PY/FULL-SSRF: Attacker-controlled URL reached httpx.get() with no SSRF protection \\u2014 internal/metadata endpoint accessible"\n_TAINTED_PARAMS = [{"index": 0, "name": "image_file", "type": "str | Path"}]\n# ========================================\n\n# === CONTEXT FOR REASONING ===\n# monitor_strategy  : patch_call\n# patch_target      : gradio.image_utils.httpx.get\n# input_strategy    : direct_params\n# function_signature: def extract_svg_content(image_file: str | Path)\n# condition_desc    : The URL argument reaching httpx.get() contains an internal/private IP address, cloud metadata endpoint (169.254.169.254), localhost, or file:// scheme — confirming SSRF exploitation with no sanitization\n# capture_what      : The URL argument passed to httpx.get() — confirms SSRF when it contains internal IPs, cloud metadata endpoints, or localhost addresses\n# ========================================\n\n\n# === PATCH_CALL SKELETON ===\n# 1. Generate fuzz inputs from FDP — use ConsumeUnicodeNoSurrogates for str,\n#    ConsumeBytes for bytes. Split buffer by param count, not ConsumeIntInRange.\n# 2. Setup mock return value appropriate for the target function.\n# 3. Patch `gradio.image_utils.httpx.get` and call `extract_svg_content`.\n# 4. After the call, iterate mock_get.call_args_list.\n#    Extract the URL/path/cmd argument (check both call.args and call.kwargs).\n#    Run each pattern in _COMPILED_PATTERNS against the captured argument.\n#    On match → raise RuntimeError(_RAISE_MESSAGE).\n# 5. except RuntimeError: raise  — never swallow oracle raises.\n#    except Exception: pass       — swallow only non-oracle exceptions.\n\n\ndef TestOneInput(data):\n    fdp = atheris.FuzzedDataProvider(data)\n    # [FILL HERE — follow the skeleton above]\n\natheris.Setup(sys.argv, TestOneInput)\natheris.Fuzz()\n'}], temperature=0.15, max_tokens=4096, timeout=120)[0m
+2026-04-01 17:19:30,696 [DEBUG] 
+
+2026-04-01 17:19:30,699 [DEBUG] Removing thought signatures from tool call IDs for non-Gemini model
+2026-04-01 17:19:30,700 [DEBUG] self.optional_params: {}
+2026-04-01 17:19:30,700 [DEBUG] SYNC kwargs[caching]: False; litellm.cache: None; kwargs.get('cache')['no-cache']: False
+2026-04-01 17:19:30,705 [DEBUG] checking potential_model_names in litellm.model_cost: {'split_model': 'claude-sonnet-4-6', 'combined_model_name': 'anthropic/claude-sonnet-4-6', 'stripped_model_name': 'claude-sonnet-4-6', 'combined_stripped_model_name': 'anthropic/claude-sonnet-4-6', 'custom_llm_provider': 'anthropic'}
+2026-04-01 17:19:30,706 [INFO] 
+LiteLLM completion() model= claude-sonnet-4-6; provider = anthropic
+2026-04-01 17:19:30,707 [DEBUG] 
+LiteLLM: Params passed to completion() {'model': 'claude-sonnet-4-6', 'functions': None, 'function_call': None, 'temperature': 0.15, 'top_p': None, 'n': None, 'stream': None, 'stream_options': None, 'stop': None, 'max_tokens': 4096, 'max_completion_tokens': None, 'modalities': None, 'prediction': None, 'audio': None, 'presence_penalty': None, 'frequency_penalty': None, 'logit_bias': None, 'user': None, 'custom_llm_provider': 'anthropic', 'response_format': None, 'seed': None, 'tools': None, 'tool_choice': None, 'max_retries': None, 'logprobs': None, 'top_logprobs': None, 'extra_headers': None, 'api_version': None, 'parallel_tool_calls': None, 'drop_params': None, 'allowed_openai_params': None, 'reasoning_effort': None, 'verbosity': None, 'additional_drop_params': None, 'messages': [{'role': 'system', 'content': 'You are an expert fuzzing engineer specializing in Python security testing with Atheris.\n\n## Your Task\n\nYou will receive a PARTIAL harness Python script with a skeleton already filled in.\nYour job is to complete the body of the `TestOneInput` function where it says `# [FILL HERE]`.\n\nCRITICAL INSTRUCTION: You MUST output the ENTIRE, COMPLETE Python script from top to bottom.\n\n- Do NOT strip or omit the top `# AUTO-GENERATED ATHERIS HARNESS SKELETON` comment block.\n- Always include the exact imports and the `with atheris.instrument_imports():` block from the skeleton.\n- Keep the `# === FIXED CONTRACTS (DO NOT MODIFY) ===` and `# === CONTEXT FOR REASONING ===` sections intact exactly as provided in the skeleton.\n- Output the COMPLETE final Python script, no markdown, no prose, do not truncate anything.\n\n## What to Fill in Inside TestOneInput()\n\n### 1. FDP Block — Generate Fuzz Inputs\n\n`fdp = atheris.FuzzedDataProvider(data)` is already declared — do not redeclare it.\n\nRead `_TAINTED_PARAMS` to know the param names and types.\nCompute `param_count = max(len(_TAINTED_PARAMS), 1)`.\nMap each param by type to a named variable:\n\n- `str`, `str | Path`, `Optional[str]` -> `fdp.ConsumeUnicodeNoSurrogates(len(data) // param_count)`\n- `bytes`, `Optional[bytes]` -> `fdp.ConsumeBytes(len(data) // param_count)`\n- `int` -> `fdp.ConsumeInt(4)`\n- `float` -> `fdp.ConsumeFloat()`\n- `bool` -> `fdp.ConsumeBool()`\n- `list` -> `[]`\n- `dict` -> `{}`\n- Union types -> use the first/primary type in the union\n\nNEVER use `ConsumeIntInRange` to determine buffer length — it consumes bytes from the buffer, reducing data available for the actual param.\n\nALWAYS assign each `Consume*` result to a named variable before passing to the function.\n\nFor non-tainted params the function still requires, use safe minimal defaults (`""`, `0`, `False`, `None` — whichever fits the type).\n\n### 2. Function Call Block\n\nCall the target function using the variables generated in step 1.\n\nDo NOT wrap in a bare `except Exception: pass` here — exception handling belongs inside the oracle block per strategy below.\n\n### 3. Oracle Check Block — Implement Based on `monitor_strategy` in CONTEXT\n\n#### "inspect_return"\n\n```python\ntry:\n    result = <function_call>\n    for pattern in _COMPILED_PATTERNS:\n        if pattern.search(str(result)):\n            raise RuntimeError(_RAISE_MESSAGE)\nexcept RuntimeError:\n    raise\nexcept Exception:\n    pass\n```\n\n#### "patch_call"\n\nRead `patch_target` from the CONTEXT comment — use it verbatim in the `patch()` call.\nRead `capture_what` from the CONTEXT comment — it describes which argument to extract.\n\n```python\nmock_response = MagicMock()\nmock_response.status_code = 200\nmock_response.text = ""\nmock_response.content = b""\ntry:\n    with patch("<patch_target>", return_value=mock_response) as mock_fn:\n        try:\n            <function_call>\n        except RuntimeError:\n            raise\n        except Exception:\n            pass\n        for call in mock_fn.call_args_list:\n            captured = (\n                str(call.args[0]) if call.args\n                else str(\n                    call.kwargs.get("url")\n                    or call.kwargs.get("path")\n                    or call.kwargs.get("cmd")\n                    or call.kwargs.get("sql")\n                    or ""\n                )\n            )\n            for pattern in _COMPILED_PATTERNS:\n                if pattern.search(captured):\n                    raise RuntimeError(_RAISE_MESSAGE)\nexcept RuntimeError:\n    raise\nexcept Exception:\n    pass\n```\n\n#### "catch_exception"\n\nRead `condition_desc` from the CONTEXT comment to identify the expected exception type.\n\n```python\ntry:\n    <function_call>\nexcept RuntimeError:\n    raise\nexcept <ExceptionType matching condition_desc>:\n    raise RuntimeError(_RAISE_MESSAGE)\nexcept Exception:\n    pass\n```\n\n## Key Rules\n\n- NEVER reference `_TRIGGER_PATTERNS` — the contract variable is `_COMPILED_PATTERNS`. Each element is a pre-compiled `re.Pattern` — call `pattern.search(string)` directly, do NOT pass it to `re.search()` or `re.compile()` again.\n- NEVER hardcode new regex patterns — always iterate `_COMPILED_PATTERNS`.\n- NEVER paraphrase the raise message — always use `_RAISE_MESSAGE` directly.\n- NEVER use `atheris.instrument_func` decorator on `TestOneInput`.\n- NEVER import `json` or call `json.loads` — all contracts are already native Python objects.\n- Keep harness minimal — no print, no logging, no assertions outside oracle block.'}, {'role': 'user', 'content': 'Complete the following partial Atheris harness by filling in the TestOneInput body.\nOutput the complete Python script only. No markdown, no explanation.\n\n# AUTO-GENERATED ATHERIS HARNESS SKELETON\n# rule_id  : py/full-ssrf\n# function : extract_svg_content\n# file     : gradio/image_utils.py\n# ================================================================\nimport atheris\nimport sys\nimport re\n\nfrom unittest.mock import patch, MagicMock\n\nwith atheris.instrument_imports():\n\n    from gradio.image_utils import extract_svg_content\n\n\n# === FIXED CONTRACTS (DO NOT MODIFY) ===\n_COMPILED_PATTERNS = [\n\n    re.compile("169\\\\.254\\\\.169\\\\.254", re.IGNORECASE),\n\n    re.compile("(?:^|[/@])127\\\\.0\\\\.0\\\\.1", re.IGNORECASE),\n\n    re.compile("(?:^|[/@])localhost", re.IGNORECASE),\n\n    re.compile("(?:^|[/@])10\\\\.\\\\d{1,3}\\\\.\\\\d{1,3}\\\\.\\\\d{1,3}", re.IGNORECASE),\n\n    re.compile("(?:^|[/@])192\\\\.168\\\\.\\\\d{1,3}\\\\.\\\\d{1,3}", re.IGNORECASE),\n\n    re.compile("(?:^|[/@])172\\\\.(?:1[6-9]|2\\\\d|3[01])\\\\.\\\\d{1,3}\\\\.\\\\d{1,3}", re.IGNORECASE),\n\n    re.compile("^file://", re.IGNORECASE),\n\n    re.compile("(?:^|[/@])0\\\\.0\\\\.0\\\\.0", re.IGNORECASE),\n\n]\n_RAISE_MESSAGE  = "PY/FULL-SSRF: Attacker-controlled URL reached httpx.get() with no SSRF protection \\u2014 internal/metadata endpoint accessible"\n_TAINTED_PARAMS = [{"index": 0, "name": "image_file", "type": "str | Path"}]\n# ========================================\n\n# === CONTEXT FOR REASONING ===\n# monitor_strategy  : patch_call\n# patch_target      : gradio.image_utils.httpx.get\n# input_strategy    : direct_params\n# function_signature: def extract_svg_content(image_file: str | Path)\n# condition_desc    : The URL argument reaching httpx.get() contains an internal/private IP address, cloud metadata endpoint (169.254.169.254), localhost, or file:// scheme — confirming SSRF exploitation with no sanitization\n# capture_what      : The URL argument passed to httpx.get() — confirms SSRF when it contains internal IPs, cloud metadata endpoints, or localhost addresses\n# ========================================\n\n\n# === PATCH_CALL SKELETON ===\n# 1. Generate fuzz inputs from FDP — use ConsumeUnicodeNoSurrogates for str,\n#    ConsumeBytes for bytes. Split buffer by param count, not ConsumeIntInRange.\n# 2. Setup mock return value appropriate for the target function.\n# 3. Patch `gradio.image_utils.httpx.get` and call `extract_svg_content`.\n# 4. After the call, iterate mock_get.call_args_list.\n#    Extract the URL/path/cmd argument (check both call.args and call.kwargs).\n#    Run each pattern in _COMPILED_PATTERNS against the captured argument.\n#    On match → raise RuntimeError(_RAISE_MESSAGE).\n# 5. except RuntimeError: raise  — never swallow oracle raises.\n#    except Exception: pass       — swallow only non-oracle exceptions.\n\n\ndef TestOneInput(data):\n    fdp = atheris.FuzzedDataProvider(data)\n    # [FILL HERE — follow the skeleton above]\n\natheris.Setup(sys.argv, TestOneInput)\natheris.Fuzz()\n'}], 'thinking': None, 'web_search_options': None, 'safety_identifier': None, 'service_tier': None}
+2026-04-01 17:19:30,711 [DEBUG] 
+LiteLLM: Non-Default params passed to completion() {'temperature': 0.15, 'max_tokens': 4096}
+2026-04-01 17:19:30,711 [DEBUG] Final returned optional params: {'temperature': 0.15, 'max_tokens': 4096}
+2026-04-01 17:19:30,712 [DEBUG] self.optional_params: {'temperature': 0.15, 'max_tokens': 4096}
+2026-04-01 17:19:30,712 [DEBUG] checking potential_model_names in litellm.model_cost: {'split_model': 'claude-sonnet-4-6', 'combined_model_name': 'anthropic/claude-sonnet-4-6', 'stripped_model_name': 'claude-sonnet-4-6', 'combined_stripped_model_name': 'anthropic/claude-sonnet-4-6', 'custom_llm_provider': 'anthropic'}
+2026-04-01 17:19:30,852 [DEBUG] [92m
+
+POST Request Sent from LiteLLM:
+curl -X POST \
+https://api.anthropic.com/v1/messages \
+-H 'anthropic-version: 2023-06-01' -H 'accept: application/json' -H 'content-type: application/json' -H 'REDACTED' \
+-d '{'model': 'claude-sonnet-4-6', 'messages': [{'role': 'user', 'content': [{'type': 'text', 'text': 'Complete the following partial Atheris harness by filling in the TestOneInput body.\nOutput the complete Python script only. No markdown, no explanation.\n\n# AUTO-GENERATED ATHERIS HARNESS SKELETON\n# rule_id  : py/full-ssrf\n# function : extract_svg_content\n# file     : gradio/image_utils.py\n# ================================================================\nimport atheris\nimport sys\nimport re\n\nfrom unittest.mock import patch, MagicMock\n\nwith atheris.instrument_imports():\n\n    from gradio.image_utils import extract_svg_content\n\n\n# === FIXED CONTRACTS (DO NOT MODIFY) ===\n_COMPILED_PATTERNS = [\n\n    re.compile("169\\\\.254\\\\.169\\\\.254", re.IGNORECASE),\n\n    re.compile("(?:^|[/@])127\\\\.0\\\\.0\\\\.1", re.IGNORECASE),\n\n    re.compile("(?:^|[/@])localhost", re.IGNORECASE),\n\n    re.compile("(?:^|[/@])10\\\\.\\\\d{1,3}\\\\.\\\\d{1,3}\\\\.\\\\d{1,3}", re.IGNORECASE),\n\n    re.compile("(?:^|[/@])192\\\\.168\\\\.\\\\d{1,3}\\\\.\\\\d{1,3}", re.IGNORECASE),\n\n    re.compile("(?:^|[/@])172\\\\.(?:1[6-9]|2\\\\d|3[01])\\\\.\\\\d{1,3}\\\\.\\\\d{1,3}", re.IGNORECASE),\n\n    re.compile("^file://", re.IGNORECASE),\n\n    re.compile("(?:^|[/@])0\\\\.0\\\\.0\\\\.0", re.IGNORECASE),\n\n]\n_RAISE_MESSAGE  = "PY/FULL-SSRF: Attacker-controlled URL reached httpx.get() with no SSRF protection \\u2014 internal/metadata endpoint accessible"\n_TAINTED_PARAMS = [{"index": 0, "name": "image_file", "type": "str | Path"}]\n# ========================================\n\n# === CONTEXT FOR REASONING ===\n# monitor_strategy  : patch_call\n# patch_target      : gradio.image_utils.httpx.get\n# input_strategy    : direct_params\n# function_signature: def extract_svg_content(image_file: str | Path)\n# condition_desc    : The URL argument reaching httpx.get() contains an internal/private IP address, cloud metadata endpoint (169.254.169.254), localhost, or file:// scheme — confirming SSRF exploitation with no sanitization\n# capture_what      : The URL argument passed to httpx.get() — confirms SSRF when it contains internal IPs, cloud metadata endpoints, or localhost addresses\n# ========================================\n\n\n# === PATCH_CALL SKELETON ===\n# 1. Generate fuzz inputs from FDP — use ConsumeUnicodeNoSurrogates for str,\n#    ConsumeBytes for bytes. Split buffer by param count, not ConsumeIntInRange.\n# 2. Setup mock return value appropriate for the target function.\n# 3. Patch `gradio.image_utils.httpx.get` and call `extract_svg_content`.\n# 4. After the call, iterate mock_get.call_args_list.\n#    Extract the URL/path/cmd argument (check both call.args and call.kwargs).\n#    Run each pattern in _COMPILED_PATTERNS against the captured argument.\n#    On match → raise RuntimeError(_RAISE_MESSAGE).\n# 5. except RuntimeError: raise  — never swallow oracle raises.\n#    except Exception: pass       — swallow only non-oracle exceptions.\n\n\ndef TestOneInput(data):\n    fdp = atheris.FuzzedDataProvider(data)\n    # [FILL HERE — follow the skeleton above]\n\natheris.Setup(sys.argv, TestOneInput)\natheris.Fuzz()\n'}]}], 'temperature': 0.15, 'max_tokens': 4096, 'system': [{'type': 'text', 'text': 'You are an expert fuzzing engineer specializing in Python security testing with Atheris.\n\n## Your Task\n\nYou will receive a PARTIAL harness Python script with a skeleton already filled in.\nYour job is to complete the body of the `TestOneInput` function where it says `# [FILL HERE]`.\n\nCRITICAL INSTRUCTION: You MUST output the ENTIRE, COMPLETE Python script from top to bottom.\n\n- Do NOT strip or omit the top `# AUTO-GENERATED ATHERIS HARNESS SKELETON` comment block.\n- Always include the exact imports and the `with atheris.instrument_imports():` block from the skeleton.\n- Keep the `# === FIXED CONTRACTS (DO NOT MODIFY) ===` and `# === CONTEXT FOR REASONING ===` sections intact exactly as provided in the skeleton.\n- Output the COMPLETE final Python script, no markdown, no prose, do not truncate anything.\n\n## What to Fill in Inside TestOneInput()\n\n### 1. FDP Block — Generate Fuzz Inputs\n\n`fdp = atheris.FuzzedDataProvider(data)` is already declared — do not redeclare it.\n\nRead `_TAINTED_PARAMS` to know the param names and types.\nCompute `param_count = max(len(_TAINTED_PARAMS), 1)`.\nMap each param by type to a named variable:\n\n- `str`, `str | Path`, `Optional[str]` -> `fdp.ConsumeUnicodeNoSurrogates(len(data) // param_count)`\n- `bytes`, `Optional[bytes]` -> `fdp.ConsumeBytes(len(data) // param_count)`\n- `int` -> `fdp.ConsumeInt(4)`\n- `float` -> `fdp.ConsumeFloat()`\n- `bool` -> `fdp.ConsumeBool()`\n- `list` -> `[]`\n- `dict` -> `{}`\n- Union types -> use the first/primary type in the union\n\nNEVER use `ConsumeIntInRange` to determine buffer length — it consumes bytes from the buffer, reducing data available for the actual param.\n\nALWAYS assign each `Consume*` result to a named variable before passing to the function.\n\nFor non-tainted params the function still requires, use safe minimal defaults (`""`, `0`, `False`, `None` — whichever fits the type).\n\n### 2. Function Call Block\n\nCall the target function using the variables generated in step 1.\n\nDo NOT wrap in a bare `except Exception: pass` here — exception handling belongs inside the oracle block per strategy below.\n\n### 3. Oracle Check Block — Implement Based on `monitor_strategy` in CONTEXT\n\n#### "inspect_return"\n\n```python\ntry:\n    result = <function_call>\n    for pattern in _COMPILED_PATTERNS:\n        if pattern.search(str(result)):\n            raise RuntimeError(_RAISE_MESSAGE)\nexcept RuntimeError:\n    raise\nexcept Exception:\n    pass\n```\n\n#### "patch_call"\n\nRead `patch_target` from the CONTEXT comment — use it verbatim in the `patch()` call.\nRead `capture_what` from the CONTEXT comment — it describes which argument to extract.\n\n```python\nmock_response = MagicMock()\nmock_response.status_code = 200\nmock_response.text = ""\nmock_response.content = b""\ntry:\n    with patch("<patch_target>", return_value=mock_response) as mock_fn:\n        try:\n            <function_call>\n        except RuntimeError:\n            raise\n        except Exception:\n            pass\n        for call in mock_fn.call_args_list:\n            captured = (\n                str(call.args[0]) if call.args\n                else str(\n                    call.kwargs.get("url")\n                    or call.kwargs.get("path")\n                    or call.kwargs.get("cmd")\n                    or call.kwargs.get("sql")\n                    or ""\n                )\n            )\n            for pattern in _COMPILED_PATTERNS:\n                if pattern.search(captured):\n                    raise RuntimeError(_RAISE_MESSAGE)\nexcept RuntimeError:\n    raise\nexcept Exception:\n    pass\n```\n\n#### "catch_exception"\n\nRead `condition_desc` from the CONTEXT comment to identify the expected exception type.\n\n```python\ntry:\n    <function_call>\nexcept RuntimeError:\n    raise\nexcept <ExceptionType matching condition_desc>:\n    raise RuntimeError(_RAISE_MESSAGE)\nexcept Exception:\n    pass\n```\n\n## Key Rules\n\n- NEVER reference `_TRIGGER_PATTERNS` — the contract variable is `_COMPILED_PATTERNS`. Each element is a pre-compiled `re.Pattern` — call `pattern.search(string)` directly, do NOT pass it to `re.search()` or `re.compile()` again.\n- NEVER hardcode new regex patterns — always iterate `_COMPILED_PATTERNS`.\n- NEVER paraphrase the raise message — always use `_RAISE_MESSAGE` directly.\n- NEVER use `atheris.instrument_func` decorator on `TestOneInput`.\n- NEVER import `json` or call `json.loads` — all contracts are already native Python objects.\n- Keep harness minimal — no print, no logging, no assertions outside oracle block.'}]}'
+[0m
+
+2026-04-01 17:19:30,856 [DEBUG] _is_function_call: False
+2026-04-01 17:19:41,193 [DEBUG] RAW RESPONSE:
+{"model":"claude-sonnet-4-6","id":"msg_01PvUF85Q4eA27HcKqeq5WhY","type":"message","role":"assistant","content":[{"type":"text","text":"# AUTO-GENERATED ATHERIS HARNESS SKELETON\n# rule_id  : py/full-ssrf\n# function : extract_svg_content\n# file     : gradio/image_utils.py\n# ================================================================\nimport atheris\nimport sys\nimport re\n\nfrom unittest.mock import patch, MagicMock\n\nwith atheris.instrument_imports():\n\n    from gradio.image_utils import extract_svg_content\n\n\n# === FIXED CONTRACTS (DO NOT MODIFY) ===\n_COMPILED_PATTERNS = [\n\n    re.compile(\"169\\\\.254\\\\.169\\\\.254\", re.IGNORECASE),\n\n    re.compile(\"(?:^|[/@])127\\\\.0\\\\.0\\\\.1\", re.IGNORECASE),\n\n    re.compile(\"(?:^|[/@])localhost\", re.IGNORECASE),\n\n    re.compile(\"(?:^|[/@])10\\\\.\\\\d{1,3}\\\\.\\\\d{1,3}\\\\.\\\\d{1,3}\", re.IGNORECASE),\n\n    re.compile(\"(?:^|[/@])192\\\\.168\\\\.\\\\d{1,3}\\\\.\\\\d{1,3}\", re.IGNORECASE),\n\n    re.compile(\"(?:^|[/@])172\\\\.(?:1[6-9]|2\\\\d|3[01])\\\\.\\\\d{1,3}\\\\.\\\\d{1,3}\", re.IGNORECASE),\n\n    re.compile(\"^file://\", re.IGNORECASE),\n\n    re.compile(\"(?:^|[/@])0\\\\.0\\\\.0\\\\.0\", re.IGNORECASE),\n\n]\n_RAISE_MESSAGE  = \"PY/FULL-SSRF: Attacker-controlled URL reached httpx.get() with no SSRF protection \\u2014 internal/metadata endpoint accessible\"\n_TAINTED_PARAMS = [{\"index\": 0, \"name\": \"image_file\", \"type\": \"str | Path\"}]\n# ========================================\n\n# === CONTEXT FOR REASONING ===\n# monitor_strategy  : patch_call\n# patch_target      : gradio.image_utils.httpx.get\n# input_strategy    : direct_params\n# function_signature: def extract_svg_content(image_file: str | Path)\n# condition_desc    : The URL argument reaching httpx.get() contains an internal/private IP address, cloud metadata endpoint (169.254.169.254), localhost, or file:// scheme — confirming SSRF exploitation with no sanitization\n# capture_what      : The URL argument passed to httpx.get() — confirms SSRF when it contains internal IPs, cloud metadata endpoints, or localhost addresses\n# ========================================\n\n\n# === PATCH_CALL SKELETON ===\n# 1. Generate fuzz inputs from FDP — use ConsumeUnicodeNoSurrogates for str,\n#    ConsumeBytes for bytes. Split buffer by param count, not ConsumeIntInRange.\n# 2. Setup mock return value appropriate for the target function.\n# 3. Patch `gradio.image_utils.httpx.get` and call `extract_svg_content`.\n# 4. After the call, iterate mock_get.call_args_list.\n#    Extract the URL/path/cmd argument (check both call.args and call.kwargs).\n#    Run each pattern in _COMPILED_PATTERNS against the captured argument.\n#    On match → raise RuntimeError(_RAISE_MESSAGE).\n# 5. except RuntimeError: raise  — never swallow oracle raises.\n#    except Exception: pass       — swallow only non-oracle exceptions.\n\n\ndef TestOneInput(data):\n    fdp = atheris.FuzzedDataProvider(data)\n\n    param_count = max(len(_TAINTED_PARAMS), 1)\n    image_file = fdp.ConsumeUnicodeNoSurrogates(len(data) // param_count)\n\n    mock_response = MagicMock()\n    mock_response.status_code = 200\n    mock_response.text = \"\"\n    mock_response.content = b\"\"\n\n    try:\n        with patch(\"gradio.image_utils.httpx.get\", return_value=mock_response) as mock_fn:\n            try:\n                extract_svg_content(image_file)\n            except RuntimeError:\n                raise\n            except Exception:\n                pass\n            for call in mock_fn.call_args_list:\n                captured = (\n                    str(call.args[0]) if call.args\n                    else str(\n                        call.kwargs.get(\"url\")\n                        or call.kwargs.get(\"path\")\n                        or call.kwargs.get(\"cmd\")\n                        or call.kwargs.get(\"sql\")\n                        or \"\"\n                    )\n                )\n                for pattern in _COMPILED_PATTERNS:\n                    if pattern.search(captured):\n                        raise RuntimeError(_RAISE_MESSAGE)\n    except RuntimeError:\n        raise\n    except Exception:\n        pass\n\natheris.Setup(sys.argv, TestOneInput)\natheris.Fuzz()"}],"stop_reason":"end_turn","stop_sequence":null,"stop_details":null,"usage":{"input_tokens":2213,"cache_creation_input_tokens":0,"cache_read_input_tokens":0,"cache_creation":{"ephemeral_5m_input_tokens":0,"ephemeral_1h_input_tokens":0},"output_tokens":1222,"service_tier":"standard","inference_geo":"global"}}
+
+
+2026-04-01 17:19:41,197 [INFO] Wrapper: Completed Call, calling success_handler
+2026-04-01 17:19:41,197 [DEBUG] Logging Details LiteLLM-Success Call: Cache_hit=None
+2026-04-01 17:19:41,198 [DEBUG] selected model name for cost calculation: anthropic/claude-sonnet-4-6
+2026-04-01 17:19:41,198 [DEBUG] selected model name for cost calculation: anthropic/claude-sonnet-4-6
+2026-04-01 17:19:41,198 [DEBUG] checking potential_model_names in litellm.model_cost: {'split_model': 'claude-sonnet-4-6', 'combined_model_name': 'anthropic/claude-sonnet-4-6', 'stripped_model_name': 'claude-sonnet-4-6', 'combined_stripped_model_name': 'anthropic/claude-sonnet-4-6', 'custom_llm_provider': 'anthropic'}
+2026-04-01 17:19:41,198 [DEBUG] checking potential_model_names in litellm.model_cost: {'split_model': 'claude-sonnet-4-6', 'combined_model_name': 'anthropic/claude-sonnet-4-6', 'stripped_model_name': 'claude-sonnet-4-6', 'combined_stripped_model_name': 'anthropic/claude-sonnet-4-6', 'custom_llm_provider': 'anthropic'}
+2026-04-01 17:19:41,199 [DEBUG] response_cost: 0.024968999999999998
+2026-04-01 17:19:41,199 [DEBUG] ========== LLM RESPONSE ==========
+# AUTO-GENERATED ATHERIS HARNESS SKELETON
+# rule_id  : py/full-ssrf
+# function : extract_svg_content
+# file     : gradio/image_utils.py
+# ================================================================
+import atheris
+import sys
+import re
+
+from unittest.mock import patch, MagicMock
+
+with atheris.instrument_imports():
+
+    from gradio.image_utils import extract_svg_content
+
+
+# === FIXED CONTRACTS (DO NOT MODIFY) ===
+_COMPILED_PATTERNS = [
+
+    re.compile("169\\.254\\.169\\.254", re.IGNORECASE),
+
+    re.compile("(?:^|[/@])127\\.0\\.0\\.1", re.IGNORECASE),
+
+    re.compile("(?:^|[/@])localhost", re.IGNORECASE),
+
+    re.compile("(?:^|[/@])10\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}", re.IGNORECASE),
+
+    re.compile("(?:^|[/@])192\\.168\\.\\d{1,3}\\.\\d{1,3}", re.IGNORECASE),
+
+    re.compile("(?:^|[/@])172\\.(?:1[6-9]|2\\d|3[01])\\.\\d{1,3}\\.\\d{1,3}", re.IGNORECASE),
+
+    re.compile("^file://", re.IGNORECASE),
+
+    re.compile("(?:^|[/@])0\\.0\\.0\\.0", re.IGNORECASE),
+
+]
+_RAISE_MESSAGE  = "PY/FULL-SSRF: Attacker-controlled URL reached httpx.get() with no SSRF protection \u2014 internal/metadata endpoint accessible"
+_TAINTED_PARAMS = [{"index": 0, "name": "image_file", "type": "str | Path"}]
+# ========================================
+
+# === CONTEXT FOR REASONING ===
+# monitor_strategy  : patch_call
+# patch_target      : gradio.image_utils.httpx.get
+# input_strategy    : direct_params
+# function_signature: def extract_svg_content(image_file: str | Path)
+# condition_desc    : The URL argument reaching httpx.get() contains an internal/private IP address, cloud metadata endpoint (169.254.169.254), localhost, or file:// scheme — confirming SSRF exploitation with no sanitization
+# capture_what      : The URL argument passed to httpx.get() — confirms SSRF when it contains internal IPs, cloud metadata endpoints, or localhost addresses
+# ========================================
+
+
+# === PATCH_CALL SKELETON ===
+# 1. Generate fuzz inputs from FDP — use ConsumeUnicodeNoSurrogates for str,
+#    ConsumeBytes for bytes. Split buffer by param count, not ConsumeIntInRange.
+# 2. Setup mock return value appropriate for the target function.
+# 3. Patch `gradio.image_utils.httpx.get` and call `extract_svg_content`.
+# 4. After the call, iterate mock_get.call_args_list.
+#    Extract the URL/path/cmd argument (check both call.args and call.kwargs).
+#    Run each pattern in _COMPILED_PATTERNS against the captured argument.
+#    On match → raise RuntimeError(_RAISE_MESSAGE).
+# 5. except RuntimeError: raise  — never swallow oracle raises.
+#    except Exception: pass       — swallow only non-oracle exceptions.
+
+
+def TestOneInput(data):
+    fdp = atheris.FuzzedDataProvider(data)
+
+    param_count = max(len(_TAINTED_PARAMS), 1)
+    image_file = fdp.ConsumeUnicodeNoSurrogates(len(data) // param_count)
+
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    mock_response.text = ""
+    mock_response.content = b""
+
+    try:
+        with patch("gradio.image_utils.httpx.get", return_value=mock_response) as mock_fn:
+            try:
+                extract_svg_content(image_file)
+            except RuntimeError:
+                raise
+            except Exception:
+                pass
+            for call in mock_fn.call_args_list:
+                captured = (
+                    str(call.args[0]) if call.args
+                    else str(
+                        call.kwargs.get("url")
+                        or call.kwargs.get("path")
+                        or call.kwargs.get("cmd")
+                        or call.kwargs.get("sql")
+                        or ""
+                    )
+                )
+                for pattern in _COMPILED_PATTERNS:
+                    if pattern.search(captured):
+                        raise RuntimeError(_RAISE_MESSAGE)
+    except RuntimeError:
+        raise
+    except Exception:
+        pass
+
+atheris.Setup(sys.argv, TestOneInput)
+atheris.Fuzz()
+==================================
+2026-04-01 17:19:41,199 [DEBUG] response_cost: 0.024968999999999998
+2026-04-01 17:19:41,200 [DEBUG] checking potential_model_names in litellm.model_cost: {'split_model': 'claude-sonnet-4-6', 'combined_model_name': 'anthropic/claude-sonnet-4-6', 'stripped_model_name': 'claude-sonnet-4-6', 'combined_stripped_model_name': 'anthropic/claude-sonnet-4-6', 'custom_llm_provider': 'anthropic'}
+2026-04-01 17:19:41,201 [INFO] [Stage2] output    : output/python/gradio/verification/harness_py_full-ssrf.py
+2026-04-01 17:19:41,202 [INFO] 
+[Stage2] Run with:
+2026-04-01 17:19:41,202 [INFO]   python output/python/gradio/verification/harness_py_full-ssrf.py -atheris_runs=10000
+2026-04-01 17:19:41,202 [INFO]   python output/python/gradio/verification/harness_py_full-ssrf.py corpus/  # with corpus dir
+2026-04-01 17:19:41,202 [INFO] 
+[Stage2] harness ready: output/python/gradio/verification/harness_py_full-ssrf.py
+2026-04-01 17:19:41,202 [DEBUG] Using selector: EpollSelector

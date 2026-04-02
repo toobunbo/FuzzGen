@@ -1,0 +1,10 @@
+{
+  "finding": {
+    "repo_name": "user-search",
+    "lang": "python",
+    "rule_id": "py/sql-injection",
+    "function_name": "search_users",
+    "file": "db/search.py",
+    "message": "User input in SQL query string may allow SQL injection."
+  }
+}

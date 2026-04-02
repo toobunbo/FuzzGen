@@ -1,0 +1,17 @@
+{
+  "finding": {
+    "repo_name": "session-manager",
+    "lang": "python",
+    "rule_id": "py/unsafe-deserialization",
+    "function_name": "load_session",
+    "file": "auth/session.py",
+    "message": "User-controlled bytes are passed to pickle.loads() without magic byte validation.",
+    "answers": [
+      "session_data",
+      "session_data is received as raw bytes from an HTTP cookie without integrity check.",
+      "No HMAC signature or magic byte prefix validation is performed before deserialization.",
+      "pickle.loads() is the sink deserializing the untrusted bytes.",
+      "Attacker crafts a malicious pickle payload to execute arbitrary Python code on the server."
+    ]
+  }
+}

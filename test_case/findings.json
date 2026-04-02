@@ -1,0 +1,177 @@
+{
+    "findings": [
+        {
+            "id": "TC-01",
+            "finding": {
+                "repo_name": "superset",
+                "lang": "python",
+                "rule_id": "py/bad-tag-filter",
+                "function_name": "sanitize_svg_content",
+                "file": "superset/utils/core.py",
+                "message": "Sanitizing SVG content string with an incomplete regex filter.",
+                "answers": [
+                    "svg_content",
+                    "svg_content flows into re.sub() replacement logic.",
+                    "Regular expression fails to strip malformed tags like `</script  >`.",
+                    "re.sub() sink mechanism outputting sanitized string.",
+                    "Attacker uploads malicious SVG bypassing filter to trigger Stored XSS."
+                ]
+            }
+        },
+        {
+            "id": "TC-02",
+            "finding": {
+                "repo_name": "legacy-crm",
+                "lang": "python",
+                "rule_id": "py/sql-injection",
+                "function_name": "execute_query",
+                "file": "app/db/query.py",
+                "message": "Unsanitized user input is interpolated directly into a SQL string via f-string.",
+                "answers": [
+                    "user_input",
+                    "user_input is concatenated into query string via f-string interpolation.",
+                    "No parameterized query or escaping is applied before cursor.execute().",
+                    "cursor.execute() is the sink receiving the tainted SQL string.",
+                    "Attacker injects SQL payload such as ' OR 1=1-- to manipulate query logic."
+                ]
+            }
+        },
+        {
+            "id": "TC-03",
+            "finding": {
+                "repo_name": "file-server",
+                "lang": "python",
+                "rule_id": "py/path-injection",
+                "function_name": "read_user_file",
+                "file": "server/file_handler.py",
+                "message": "User-controlled filename is passed to open() without path traversal validation.",
+                "answers": [
+                    "filename",
+                    "filename is joined with base directory via os.path.join() without stripping ../ sequences.",
+                    "os.path.join does not prevent traversal if filename starts with / or contains ../.",
+                    "open() is the sink receiving the potentially traversed path.",
+                    "Attacker supplies ../../etc/passwd to read arbitrary system files."
+                ]
+            }
+        },
+        {
+            "id": "TC-04",
+            "finding": {
+                "repo_name": "internal-proxy",
+                "lang": "python",
+                "rule_id": "py/ssrf",
+                "function_name": "fetch_url_view",
+                "file": "proxy/views.py",
+                "message": "URL parameter from Flask request.args is passed directly to requests.get() without domain validation.",
+                "answers": [
+                    "url",
+                    "url originates from flask.request.args.get('url') — fully user-controlled.",
+                    "No allowlist or scheme validation is applied to the URL before the HTTP call.",
+                    "requests.get() is the sink making the outbound HTTP request.",
+                    "Attacker supplies http://169.254.169.254/latest/meta-data/ to access cloud metadata."
+                ]
+            }
+        },
+        {
+            "id": "TC-05",
+            "finding": {
+                "repo_name": "network-toolkit",
+                "lang": "python",
+                "rule_id": "py/command-injection",
+                "function_name": "run_scan",
+                "file": "tools/scanner.py",
+                "message": "User-supplied target_ip is interpolated into a shell command string executed with shell=True.",
+                "answers": [
+                    "target_ip",
+                    "target_ip is embedded into a shell command via f-string: f'ping -c 1 {target_ip}'.",
+                    "No shell metacharacter escaping or input validation is performed.",
+                    "subprocess.run(..., shell=True) is the sink executing the constructed command.",
+                    "Attacker supplies '127.0.0.1; rm -rf /' to execute arbitrary OS commands."
+                ]
+            }
+        },
+        {
+            "id": "TC-06",
+            "finding": {
+                "repo_name": "session-manager",
+                "lang": "python",
+                "rule_id": "py/unsafe-deserialization",
+                "function_name": "load_session",
+                "file": "auth/session.py",
+                "message": "User-controlled bytes are passed to pickle.loads() without magic byte validation.",
+                "answers": [
+                    "session_data",
+                    "session_data is received as raw bytes from an HTTP cookie without integrity check.",
+                    "No HMAC signature or magic byte prefix validation is performed before deserialization.",
+                    "pickle.loads() is the sink deserializing the untrusted bytes.",
+                    "Attacker crafts a malicious pickle payload to execute arbitrary Python code on the server."
+                ]
+            }
+        },
+        {
+            "id": "TC-07",
+            "finding": {
+                "repo_name": "report-engine",
+                "lang": "python",
+                "rule_id": "py/taint-tracking",
+                "function_name": "render_user_template",
+                "file": "engine/renderer.py",
+                "message": "Multiple user-controlled parameters flow into render_template_string(), enabling Server-Side Template Injection.",
+                "answers": [
+                    "template, username, email",
+                    "All three parameters originate from user-supplied HTTP form data without sanitization.",
+                    "Jinja2 evaluates {{ }} and {% %} expressions inside the template string at runtime.",
+                    "render_template_string() is the sink executing the Jinja2 template with user-controlled context.",
+                    "Attacker injects {{config}} or {{''.__class__.__mro__}} to leak secrets or achieve RCE."
+                ]
+            }
+        },
+        {
+            "id": "TC-08",
+            "finding": {
+                "repo_name": "api-gateway",
+                "lang": "python",
+                "rule_id": "py/bad-tag-filter",
+                "function_name": "process_request",
+                "file": "gateway/handler.py",
+                "message": "Flask route handler reads raw HTML from request.data and applies an incomplete tag-stripping regex.",
+                "answers": [
+                    "flask.request.data",
+                    "Request body flows into the function via flask.request.data — no explicit parameter.",
+                    "The tag-stripping regex strips <script> but misses variations like <Script> or <scr\\0ipt>.",
+                    "The filtered HTML string is returned in the HTTP response and rendered in the browser.",
+                    "Attacker sends crafted request body to inject script tags bypassing the filter."
+                ]
+            }
+        },
+        {
+            "id": "TC-09",
+            "finding": {
+                "repo_name": "user-search",
+                "lang": "python",
+                "rule_id": "py/sql-injection",
+                "function_name": "search_users",
+                "file": "db/search.py",
+                "message": "User input in SQL query string may allow SQL injection."
+            }
+        },
+        {
+            "id": "TC-10",
+            "finding": {
+                "repo_name": "superset",
+                "lang": "python",
+                "rule_id": "py/bad-tag-filter",
+                "function_name": "sanitize_svg_content",
+                "file": "superset/utils/core.py",
+                "message": "Sanitizing SVG content string with an incomplete regex filter.",
+                "answers": [
+                    "svg_content",
+                    "svg_content flows into re.sub() replacement logic.",
+                    "Regular expression fails to strip malformed tags like `</script  >`.",
+                    "re.sub() sink mechanism outputting sanitized string.",
+                    "Attacker uploads malicious SVG bypassing filter to trigger Stored XSS."
+                ]
+            }
+        }
+    ]
+}

@@ -1,0 +1,17 @@
+{
+  "finding": {
+    "repo_name": "internal-proxy",
+    "lang": "python",
+    "rule_id": "py/ssrf",
+    "function_name": "fetch_url_view",
+    "file": "proxy/views.py",
+    "message": "URL parameter from Flask request.args is passed directly to requests.get() without domain validation.",
+    "answers": [
+      "url",
+      "url originates from flask.request.args.get('url') — fully user-controlled.",
+      "No allowlist or scheme validation is applied to the URL before the HTTP call.",
+      "requests.get() is the sink making the outbound HTTP request.",
+      "Attacker supplies http://169.254.169.254/latest/meta-data/ to access cloud metadata."
+    ]
+  }
+}

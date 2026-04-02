@@ -1,0 +1,37 @@
+{
+  "oracle_type": "inspect_return",
+  "attack_scenario": "Malicious session_data causes arbitrary code execution via pickle.loads()",
+  "tainted_params": [
+    {
+      "name": "session_data",
+      "index": 0,
+      "type": "bytes"
+    }
+  ],
+  "monitor": {
+    "strategy": "inspect_return",
+    "patch_target": null,
+    "capture_what": "load_session's return value",
+    "additional_imports": []
+  },
+  "oracle_check": {
+    "condition_description": "Session data contains invalid bytes that bypass validation before deserialization, causing arbitrary code execution",
+    "trigger_patterns": [
+      "bmsg.*"
+    ],
+    "raise_type": "RuntimeError",
+    "raise_message_template": "Malicious session_data: {value}"
+  },
+  "expected_exceptions": [
+    "pickle.PickleError"
+  ],
+  "cleanup_needed": false,
+  "cleanup_description": null,
+  "_meta": {
+    "function": "load_session",
+    "file": "auth/session.py",
+    "input_strategy": "direct_params",
+    "function_signature": "def load_session(session_data: bytes)",
+    "model": "ollama/deepseek-r1:7b"
+  }
+}

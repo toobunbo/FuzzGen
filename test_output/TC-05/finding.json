@@ -1,0 +1,17 @@
+{
+  "finding": {
+    "repo_name": "network-toolkit",
+    "lang": "python",
+    "rule_id": "py/command-injection",
+    "function_name": "run_scan",
+    "file": "tools/scanner.py",
+    "message": "User-supplied target_ip is interpolated into a shell command string executed with shell=True.",
+    "answers": [
+      "target_ip",
+      "target_ip is embedded into a shell command via f-string: f'ping -c 1 {target_ip}'.",
+      "No shell metacharacter escaping or input validation is performed.",
+      "subprocess.run(..., shell=True) is the sink executing the constructed command.",
+      "Attacker supplies '127.0.0.1; rm -rf /' to execute arbitrary OS commands."
+    ]
+  }
+}

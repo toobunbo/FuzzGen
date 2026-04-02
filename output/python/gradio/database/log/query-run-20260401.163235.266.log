@@ -1,0 +1,10 @@
+[2026-04-01 16:32:35] This is codeql query run extract_signatures.ql --database=../database --output=results.bqrs
+[2026-04-01 16:32:35] Log file was started late.
+[2026-04-01 16:32:35] Calling plumbing command: codeql resolve ram --dataset=/home/caterpie/FuzzGen/output/python/gradio/database/db-python --format=json
+[2026-04-01 16:32:35] [WARN] resolve ram> Stingpool size measured as 19956138
+[2026-04-01 16:32:35] Plumbing command codeql resolve ram completed:
+                      [
+                        "-J-Xmx1134M"
+                      ]
+[2026-04-01 16:32:35] Chaining via /tmp/codeql.38s8SOD8 to plumbing: execute queries -J-Xmx1134M --verbosity=progress --logdir=/home/caterpie/FuzzGen/output/python/gradio/database/log --evaluator-log-level=5 --warnings=show --qlconfig-file=/home/caterpie/FuzzGen/output/python/gradio/queries/qlconfig.yml --output=/home/caterpie/FuzzGen/output/python/gradio/queries/results.bqrs -- /home/caterpie/FuzzGen/output/python/gradio/database/db-python path:/home/caterpie/FuzzGen/output/python/gradio/queries/extract_signatures.ql
+[2026-04-01 16:32:35] Exiting with code 70

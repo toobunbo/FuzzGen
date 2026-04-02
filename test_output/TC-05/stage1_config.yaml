@@ -1,0 +1,8 @@
+functions_csv: test_case/functions.csv
+max_tokens: 2048
+model: openai/qwen3-coder-flash
+oracle_spec_out: test_output/TC-05/oracle_spec.json
+prompts_dir: src/prompts
+signatures_csv: test_case/signatures_function.csv
+temperature: 0.3
+timeout: 180

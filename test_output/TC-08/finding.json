@@ -1,0 +1,17 @@
+{
+  "finding": {
+    "repo_name": "api-gateway",
+    "lang": "python",
+    "rule_id": "py/bad-tag-filter",
+    "function_name": "process_request",
+    "file": "gateway/handler.py",
+    "message": "Flask route handler reads raw HTML from request.data and applies an incomplete tag-stripping regex.",
+    "answers": [
+      "flask.request.data",
+      "Request body flows into the function via flask.request.data — no explicit parameter.",
+      "The tag-stripping regex strips <script> but misses variations like <Script> or <scr\\0ipt>.",
+      "The filtered HTML string is returned in the HTTP response and rendered in the browser.",
+      "Attacker sends crafted request body to inject script tags bypassing the filter."
+    ]
+  }
+}

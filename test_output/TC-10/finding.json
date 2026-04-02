@@ -1,0 +1,17 @@
+{
+  "finding": {
+    "repo_name": "superset",
+    "lang": "python",
+    "rule_id": "py/bad-tag-filter",
+    "function_name": "sanitize_svg_content",
+    "file": "superset/utils/core.py",
+    "message": "Sanitizing SVG content string with an incomplete regex filter.",
+    "answers": [
+      "svg_content",
+      "svg_content flows into re.sub() replacement logic.",
+      "Regular expression fails to strip malformed tags like `</script  >`.",
+      "re.sub() sink mechanism outputting sanitized string.",
+      "Attacker uploads malicious SVG bypassing filter to trigger Stored XSS."
+    ]
+  }
+}

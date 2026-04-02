@@ -1,0 +1,46 @@
+# AUTO-GENERATED ATHERIS HARNESS
+# rule_id  : {{ rule_id }}
+# function : {{ function_name }}
+# file     : {{ file_path }}
+# ================================================================
+import atheris
+import sys
+import re
+{% for imp in extra_imports %}
+{{ imp }}
+{% endfor %}
+with atheris.instrument_imports():
+{% for stmt in import_stmts %}
+    {{ stmt }}
+{% endfor %}
+
+# === FIXED CONTRACTS (DO NOT MODIFY) ===
+_COMPILED_PATTERNS = [
+{% for p in trigger_patterns %}
+    re.compile({{ p | tojson }}, re.IGNORECASE),
+{% endfor %}
+]
+_RAISE_MESSAGE  = {{ raise_message | tojson }}
+_TAINTED_PARAMS = {{ tainted_params | tojson }}
+# ========================================
+
+# === ORACLE CONTEXT ===
+# strategy         : {{ monitor_strategy }}
+# patch_target     : {{ patch_target }}
+# target_arg_index : {{ target_arg_index }}
+# target_arg_name  : {{ target_arg_name }}
+# input_strategy   : {{ input_strategy }}
+# signature        : {{ function_signature }}
+# condition        : {{ condition_desc }}
+# capture_what     : {{ capture_what }}
+# skip_hint        : {{ skip_condition }}
+# seed_corpus      : {{ seed_corpus | tojson }}
+# ========================================
+
+def TestOneInput(data):
+    fdp = atheris.FuzzedDataProvider(data)
+
+
+if __name__ == "__main__":
+    atheris.Setup(sys.argv, TestOneInput)
+    atheris.Fuzz()

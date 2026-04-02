@@ -1,0 +1,37 @@
+{
+  "oracle_type": "inspect_return",
+  "attack_scenario": "An attacker injects SQL payload into the query string via f-string interpolation without proper escaping or parameterization.",
+  "tainted_params": [
+    {
+      "name": "user_input",
+      "index": 1,
+      "type": "str"
+    }
+  ],
+  "monitor": {
+    "strategy": "inspect_return",
+    "patch_target": null,
+    "capture_what": "execute_query's return value",
+    "additional_imports": []
+  },
+  "oracle_check": {
+    "condition_description": "The returned query contains unsafe SQL characters or can be parsed as a SQL command.",
+    "trigger_patterns": [
+      "SELECT.* FROM"
+    ],
+    "raise_type": "RuntimeError",
+    "raise_message_template": "SQL injection detected in execute_query. The user input was injected into the SQL string."
+  },
+  "expected_exceptions": [
+    "RuntimeError"
+  ],
+  "cleanup_needed": true,
+  "cleanup_description": null,
+  "_meta": {
+    "function": "execute_query",
+    "file": "app/db/query.py",
+    "input_strategy": "direct_params",
+    "function_signature": "def execute_query(query: str, user_input: str)",
+    "model": "ollama/deepseek-r1:7b"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "finding": {
+    "repo_name": "report-engine",
+    "lang": "python",
+    "rule_id": "py/taint-tracking",
+    "function_name": "render_user_template",
+    "file": "engine/renderer.py",
+    "message": "Multiple user-controlled parameters flow into render_template_string(), enabling Server-Side Template Injection.",
+    "answers": [
+      "template, username, email",
+      "All three parameters originate from user-supplied HTTP form data without sanitization.",
+      "Jinja2 evaluates {{ }} and {% %} expressions inside the template string at runtime.",
+      "render_template_string() is the sink executing the Jinja2 template with user-controlled context.",
+      "Attacker injects {{config}} or {{''.__class__.__mro__}} to leak secrets or achieve RCE."
+    ]
+  }
+}

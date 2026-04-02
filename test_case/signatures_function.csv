@@ -1,0 +1,14 @@
+tc_id,name,file,start_line,end_line,param_name,param_type
+TC-01,sanitize_svg_content,superset/utils/core.py,124,142,svg_content,str
+TC-02,execute_query,app/db/query.py,38,61,query,str
+TC-02,execute_query,app/db/query.py,38,61,user_input,str
+TC-03,read_user_file,server/file_handler.py,22,45,filename,str
+TC-04,fetch_url_view,proxy/views.py,15,34,,
+TC-05,run_scan,tools/scanner.py,10,29,target_ip,str
+TC-06,load_session,auth/session.py,55,78,session_data,bytes
+TC-07,render_user_template,engine/renderer.py,80,105,template,str
+TC-07,render_user_template,engine/renderer.py,80,105,username,str
+TC-07,render_user_template,engine/renderer.py,80,105,email,str
+TC-08,process_request,gateway/handler.py,30,52,,
+TC-09,search_users,db/search.py,11,30,keyword,str
+TC-10,sanitize_svg_content,superset/utils/core.py,124,142,svg_content,str

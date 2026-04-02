@@ -1,0 +1,231 @@
+[2026-04-01 16:30:57] This is codeql execute queries -J-Xmx1134M --verbosity=progress --logdir=/home/caterpie/FuzzGen/output/python/gradio/database/log --evaluator-log-level=5 --warnings=show --qlconfig-file=/home/caterpie/FuzzGen/output/python/gradio/queries/qlconfig.yml --output=/home/caterpie/FuzzGen/output/python/gradio/queries/results.bqrs -- /home/caterpie/FuzzGen/output/python/gradio/database/db-python path:/home/caterpie/FuzzGen/output/python/gradio/queries/extract_signatures.ql
+[2026-04-01 16:30:57] Calling plumbing command: codeql resolve queries --qlconfig-file=/home/caterpie/FuzzGen/output/python/gradio/queries/qlconfig.yml --format=json -- path:/home/caterpie/FuzzGen/output/python/gradio/queries/extract_signatures.ql
+[2026-04-01 16:30:57] [PROGRESS] resolve queries> Recording pack reference extract-python-signatures at /home/caterpie/FuzzGen/output/python/gradio/queries.
+[2026-04-01 16:30:57] Plumbing command codeql resolve queries completed:
+                      [
+                        "/home/caterpie/FuzzGen/output/python/gradio/queries/extract_signatures.ql"
+                      ]
+[2026-04-01 16:30:57] Creating executor with 1 threads.
+[2026-04-01 16:30:57] Calling plumbing command: codeql resolve extensions --qlconfig-file=/home/caterpie/FuzzGen/output/python/gradio/queries/qlconfig.yml path:/home/caterpie/FuzzGen/output/python/gradio/queries/extract_signatures.ql
+[2026-04-01 16:30:58] Calling plumbing command: codeql resolve queries --qlconfig-file=/home/caterpie/FuzzGen/output/python/gradio/queries/qlconfig.yml --allow-library-packs --format startingpacks -- path:/home/caterpie/FuzzGen/output/python/gradio/queries/extract_signatures.ql
+[2026-04-01 16:30:58] [PROGRESS] resolve queries> Recording pack reference extract-python-signatures at /home/caterpie/FuzzGen/output/python/gradio/queries.
+[2026-04-01 16:30:58] Plumbing command codeql resolve queries completed:
+                      [
+                        "/home/caterpie/FuzzGen/output/python/gradio/queries"
+                      ]
+[2026-04-01 16:30:58] Calling plumbing command: codeql resolve extensions-by-pack --qlconfig-file=/home/caterpie/FuzzGen/output/python/gradio/queries/qlconfig.yml -- /home/caterpie/FuzzGen/output/python/gradio/queries
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] extract-python-signatures: not 1.0.0 {root: extract-python-signatures@1.0.0}
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [DERIVATION] extract-python-signatures: 1.0.0 {extract-python-signatures: not 1.0.0 {root: extract-python-signatures@1.0.0}}
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] extract-python-signatures: * [*], codeql/python-all: not * [*] {dependency: extract-python-signatures@* [*] requires codeql/python-all@*}
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [DECISION 1] extract-python-signatures: 1.0.0
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [DERIVATION] codeql/python-all: * [*] {extract-python-signatures: * [*], codeql/python-all: not * [*] {dependency: extract-python-signatures@* [*] requires codeql/python-all@*}}
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/python-all: * [*], codeql/dataflow: not * [*] {dependency: codeql/python-all@* [*] requires codeql/dataflow@0.1.6}
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/python-all: * [*], codeql/mad: not * [*] {dependency: codeql/python-all@* [*] requires codeql/mad@0.2.6}
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/python-all: * [*], codeql/regex: not * [*] {dependency: codeql/python-all@* [*] requires codeql/regex@0.2.6}
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/python-all: * [*], codeql/tutorial: not * [*] {dependency: codeql/python-all@* [*] requires codeql/tutorial@0.2.6}
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/python-all: * [*], codeql/util: not * [*] {dependency: codeql/python-all@* [*] requires codeql/util@0.2.6}
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/python-all: * [*], codeql/yaml: not * [*] {dependency: codeql/python-all@* [*] requires codeql/yaml@0.2.6}
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [DECISION 2] codeql/python-all: 0.11.6
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [DERIVATION] codeql/yaml: * [*] {codeql/python-all: * [*], codeql/yaml: not * [*] {dependency: codeql/python-all@* [*] requires codeql/yaml@0.2.6}}
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [DERIVATION] codeql/util: * [*] {codeql/python-all: * [*], codeql/util: not * [*] {dependency: codeql/python-all@* [*] requires codeql/util@0.2.6}}
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [DERIVATION] codeql/tutorial: * [*] {codeql/python-all: * [*], codeql/tutorial: not * [*] {dependency: codeql/python-all@* [*] requires codeql/tutorial@0.2.6}}
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [DERIVATION] codeql/regex: * [*] {codeql/python-all: * [*], codeql/regex: not * [*] {dependency: codeql/python-all@* [*] requires codeql/regex@0.2.6}}
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [DERIVATION] codeql/mad: * [*] {codeql/python-all: * [*], codeql/mad: not * [*] {dependency: codeql/python-all@* [*] requires codeql/mad@0.2.6}}
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [DERIVATION] codeql/dataflow: * [*] {codeql/python-all: * [*], codeql/dataflow: not * [*] {dependency: codeql/python-all@* [*] requires codeql/dataflow@0.1.6}}
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/dataflow: * [*], codeql/ssa: not * [*] {dependency: codeql/dataflow@* [*] requires codeql/ssa@0.2.6}
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/dataflow: * [*], codeql/typetracking: not * [*] {dependency: codeql/dataflow@* [*] requires codeql/typetracking@0.2.6}
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/dataflow: * [*], codeql/util: not * [*] {dependency: codeql/dataflow@* [*] requires codeql/util@0.2.6}
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [DECISION 3] codeql/dataflow: 0.1.6
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [DERIVATION] codeql/typetracking: * [*] {codeql/dataflow: * [*], codeql/typetracking: not * [*] {dependency: codeql/dataflow@* [*] requires codeql/typetracking@0.2.6}}
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [DERIVATION] codeql/ssa: * [*] {codeql/dataflow: * [*], codeql/ssa: not * [*] {dependency: codeql/dataflow@* [*] requires codeql/ssa@0.2.6}}
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [DECISION 4] codeql/mad: 0.2.6
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/regex: * [*], codeql/util: not * [*] {dependency: codeql/regex@* [*] requires codeql/util@0.2.6}
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [DECISION 5] codeql/regex: 0.2.6
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/ssa: * [*], codeql/util: not * [*] {dependency: codeql/ssa@* [*] requires codeql/util@0.2.6}
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [DECISION 6] codeql/ssa: 0.2.6
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [DECISION 7] codeql/tutorial: 0.2.6
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/typetracking: * [*], codeql/util: not * [*] {dependency: codeql/typetracking@* [*] requires codeql/util@0.2.6}
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [DECISION 8] codeql/typetracking: 0.2.6
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [DECISION 9] codeql/util: 0.2.6
+[2026-04-01 16:30:58] [SPAMMY] resolve extensions-by-pack> [DECISION 10] codeql/yaml: 0.2.6
+[2026-04-01 16:30:58] [PROGRESS] resolve extensions-by-pack> Loading data extensions in /home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml.
+[2026-04-01 16:30:58] [DETAILS] resolve extensions-by-pack>   Found extension targeting codeql/python-all:sourceModel: 0 tuples.
+[2026-04-01 16:30:58] [DETAILS] resolve extensions-by-pack>   Found extension targeting codeql/python-all:sinkModel: 0 tuples.
+[2026-04-01 16:30:58] [DETAILS] resolve extensions-by-pack>   Found extension targeting codeql/python-all:summaryModel: 0 tuples.
+[2026-04-01 16:30:58] [DETAILS] resolve extensions-by-pack>   Found extension targeting codeql/python-all:neutralModel: 0 tuples.
+[2026-04-01 16:30:58] [DETAILS] resolve extensions-by-pack>   Found extension targeting codeql/python-all:typeModel: 0 tuples.
+[2026-04-01 16:30:58] [DETAILS] resolve extensions-by-pack>   Found extension targeting codeql/python-all:typeVariableModel: 0 tuples.
+[2026-04-01 16:30:58] [PROGRESS] resolve extensions-by-pack> Loading data extensions in /home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/subclass-capture/ALL.model.yml.
+[2026-04-01 16:30:58] [DETAILS] resolve extensions-by-pack>   Found extension targeting codeql/python-all:typeModel: 58275 tuples.
+[2026-04-01 16:30:58] Plumbing command codeql resolve extensions-by-pack completed:
+                      {
+                        "models" : [ ],
+                        "data" : {
+                          "/home/caterpie/FuzzGen/output/python/gradio/queries" : [
+                            {
+                              "predicate" : "neutralModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml",
+                              "index" : 3
+                            },
+                            {
+                              "predicate" : "sinkModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml",
+                              "index" : 1
+                            },
+                            {
+                              "predicate" : "sourceModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml",
+                              "index" : 0
+                            },
+                            {
+                              "predicate" : "summaryModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml",
+                              "index" : 2
+                            },
+                            {
+                              "predicate" : "typeModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml",
+                              "index" : 4
+                            },
+                            {
+                              "predicate" : "typeVariableModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml",
+                              "index" : 5
+                            },
+                            {
+                              "predicate" : "typeModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/subclass-capture/ALL.model.yml",
+                              "index" : 0
+                            }
+                          ]
+                        },
+                        "threatModels" : { },
+                        "extensionPacks" : [ ]
+                      }
+[2026-04-01 16:30:58] Plumbing command codeql resolve extensions completed:
+                      {
+                        "models" : [ ],
+                        "data" : {
+                          "/home/caterpie/FuzzGen/output/python/gradio/queries" : [
+                            {
+                              "predicate" : "neutralModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml",
+                              "index" : 3
+                            },
+                            {
+                              "predicate" : "sinkModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml",
+                              "index" : 1
+                            },
+                            {
+                              "predicate" : "sourceModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml",
+                              "index" : 0
+                            },
+                            {
+                              "predicate" : "summaryModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml",
+                              "index" : 2
+                            },
+                            {
+                              "predicate" : "typeModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml",
+                              "index" : 4
+                            },
+                            {
+                              "predicate" : "typeVariableModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/empty.model.yml",
+                              "index" : 5
+                            },
+                            {
+                              "predicate" : "typeModel",
+                              "file" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmle/python/frameworks/data/internal/subclass-capture/ALL.model.yml",
+                              "index" : 0
+                            }
+                          ]
+                        },
+                        "threatModels" : { },
+                        "extensionPacks" : [ ]
+                      }
+[2026-04-01 16:30:59] Calling plumbing command: codeql resolve library-path --qlconfig-file=/home/caterpie/FuzzGen/output/python/gradio/queries/qlconfig.yml --query=/home/caterpie/FuzzGen/output/python/gradio/queries/extract_signatures.ql --format=json
+[2026-04-01 16:30:59] [DETAILS] resolve library-path> Resolving query at normalized path /home/caterpie/FuzzGen/output/python/gradio/queries/extract_signatures.ql.
+[2026-04-01 16:30:59] [DETAILS] resolve library-path> Found enclosing pack 'extract-python-signatures' at /home/caterpie/FuzzGen/output/python/gradio/queries.
+[2026-04-01 16:30:59] [DETAILS] resolve library-path> Adding compilation cache at /home/caterpie/.codeql/compile-cache.
+[2026-04-01 16:30:59] [DETAILS] resolve library-path> Resolving library dependencies from /home/caterpie/FuzzGen/output/python/gradio/queries/qlpack.yml.
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [INCOMPATIBILITY] extract-python-signatures: not 1.0.0 {root: extract-python-signatures@1.0.0}
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [DERIVATION] extract-python-signatures: 1.0.0 {extract-python-signatures: not 1.0.0 {root: extract-python-signatures@1.0.0}}
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [INCOMPATIBILITY] extract-python-signatures: * [*], codeql/python-all: not * [*] {dependency: extract-python-signatures@* [*] requires codeql/python-all@*}
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [DECISION 1] extract-python-signatures: 1.0.0
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [DERIVATION] codeql/python-all: * [*] {extract-python-signatures: * [*], codeql/python-all: not * [*] {dependency: extract-python-signatures@* [*] requires codeql/python-all@*}}
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [INCOMPATIBILITY] codeql/python-all: * [*], codeql/dataflow: not * [*] {dependency: codeql/python-all@* [*] requires codeql/dataflow@0.1.6}
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [INCOMPATIBILITY] codeql/python-all: * [*], codeql/mad: not * [*] {dependency: codeql/python-all@* [*] requires codeql/mad@0.2.6}
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [INCOMPATIBILITY] codeql/python-all: * [*], codeql/regex: not * [*] {dependency: codeql/python-all@* [*] requires codeql/regex@0.2.6}
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [INCOMPATIBILITY] codeql/python-all: * [*], codeql/tutorial: not * [*] {dependency: codeql/python-all@* [*] requires codeql/tutorial@0.2.6}
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [INCOMPATIBILITY] codeql/python-all: * [*], codeql/util: not * [*] {dependency: codeql/python-all@* [*] requires codeql/util@0.2.6}
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [INCOMPATIBILITY] codeql/python-all: * [*], codeql/yaml: not * [*] {dependency: codeql/python-all@* [*] requires codeql/yaml@0.2.6}
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [DECISION 2] codeql/python-all: 0.11.6
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [DERIVATION] codeql/yaml: * [*] {codeql/python-all: * [*], codeql/yaml: not * [*] {dependency: codeql/python-all@* [*] requires codeql/yaml@0.2.6}}
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [DERIVATION] codeql/util: * [*] {codeql/python-all: * [*], codeql/util: not * [*] {dependency: codeql/python-all@* [*] requires codeql/util@0.2.6}}
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [DERIVATION] codeql/tutorial: * [*] {codeql/python-all: * [*], codeql/tutorial: not * [*] {dependency: codeql/python-all@* [*] requires codeql/tutorial@0.2.6}}
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [DERIVATION] codeql/regex: * [*] {codeql/python-all: * [*], codeql/regex: not * [*] {dependency: codeql/python-all@* [*] requires codeql/regex@0.2.6}}
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [DERIVATION] codeql/mad: * [*] {codeql/python-all: * [*], codeql/mad: not * [*] {dependency: codeql/python-all@* [*] requires codeql/mad@0.2.6}}
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [DERIVATION] codeql/dataflow: * [*] {codeql/python-all: * [*], codeql/dataflow: not * [*] {dependency: codeql/python-all@* [*] requires codeql/dataflow@0.1.6}}
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [INCOMPATIBILITY] codeql/dataflow: * [*], codeql/ssa: not * [*] {dependency: codeql/dataflow@* [*] requires codeql/ssa@0.2.6}
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [INCOMPATIBILITY] codeql/dataflow: * [*], codeql/typetracking: not * [*] {dependency: codeql/dataflow@* [*] requires codeql/typetracking@0.2.6}
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [INCOMPATIBILITY] codeql/dataflow: * [*], codeql/util: not * [*] {dependency: codeql/dataflow@* [*] requires codeql/util@0.2.6}
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [DECISION 3] codeql/dataflow: 0.1.6
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [DERIVATION] codeql/typetracking: * [*] {codeql/dataflow: * [*], codeql/typetracking: not * [*] {dependency: codeql/dataflow@* [*] requires codeql/typetracking@0.2.6}}
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [DERIVATION] codeql/ssa: * [*] {codeql/dataflow: * [*], codeql/ssa: not * [*] {dependency: codeql/dataflow@* [*] requires codeql/ssa@0.2.6}}
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [DECISION 4] codeql/mad: 0.2.6
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [INCOMPATIBILITY] codeql/regex: * [*], codeql/util: not * [*] {dependency: codeql/regex@* [*] requires codeql/util@0.2.6}
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [DECISION 5] codeql/regex: 0.2.6
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [INCOMPATIBILITY] codeql/ssa: * [*], codeql/util: not * [*] {dependency: codeql/ssa@* [*] requires codeql/util@0.2.6}
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [DECISION 6] codeql/ssa: 0.2.6
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [DECISION 7] codeql/tutorial: 0.2.6
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [INCOMPATIBILITY] codeql/typetracking: * [*], codeql/util: not * [*] {dependency: codeql/typetracking@* [*] requires codeql/util@0.2.6}
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [DECISION 8] codeql/typetracking: 0.2.6
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [DECISION 9] codeql/util: 0.2.6
+[2026-04-01 16:30:59] [SPAMMY] resolve library-path> [DECISION 10] codeql/yaml: 0.2.6
+[2026-04-01 16:30:59] [DETAILS] resolve library-path> QL pack dependencies for /home/caterpie/FuzzGen/output/python/gradio/queries resolved OK.
+[2026-04-01 16:30:59] [DETAILS] resolve library-path> Found dbscheme through QL packs: /home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmlecode.python.dbscheme.
+[2026-04-01 16:30:59] Plumbing command codeql resolve library-path completed:
+                      {
+                        "libraryPath" : [
+                          "/home/caterpie/FuzzGen/output/python/gradio/queries",
+                          "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6",
+                          "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/dataflow/0.1.6",
+                          "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/mad/0.2.6",
+                          "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/regex/0.2.6",
+                          "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/ssa/0.2.6",
+                          "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/tutorial/0.2.6",
+                          "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/typetracking/0.2.6",
+                          "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/util/0.2.6",
+                          "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/yaml/0.2.6"
+                        ],
+                        "dbscheme" : "/home/caterpie/DuAn/CodeQL/codeql/qlpacks/codeql/python-all/0.11.6/semmlecode.python.dbscheme",
+                        "compilationCache" : [
+                          "/home/caterpie/.codeql/compile-cache"
+                        ],
+                        "relativeName" : "extract-python-signatures/extract_signatures.ql",
+                        "qlPackName" : "extract-python-signatures"
+                      }
+[2026-04-01 16:30:59] [PROGRESS] execute queries> Compiling query plan for /home/caterpie/FuzzGen/output/python/gradio/queries/extract_signatures.ql.
+[2026-04-01 16:30:59] [DETAILS] execute queries> Resolving imports for /home/caterpie/FuzzGen/output/python/gradio/queries/extract_signatures.ql.
+[2026-04-01 16:31:00] Resolved file set for /home/caterpie/FuzzGen/output/python/gradio/queries/extract_signatures.ql hashes to cf468dc1978b0a6e298bd71355de4f3ae4e664e1.
+[2026-04-01 16:31:00] [DETAILS] execute queries> Checking QL for /home/caterpie/FuzzGen/output/python/gradio/queries/extract_signatures.ql.
+[2026-04-01 16:31:00] ExternalModuleBindingPass ...
+[2026-04-01 16:31:01] ExternalModuleBindingPass time: 00:01.106
+[2026-04-01 16:31:01] CollectInstantiationsPass ...
+[2026-04-01 16:31:01] CollectInstantiationsPass time: 00:00.188
+[2026-04-01 16:31:02] Ambiguity checks ...
+[2026-04-01 16:31:02] Ambiguity checks time: 00:00.207
+[2026-04-01 16:31:02] Ql checks ...
+[2026-04-01 16:31:04] Ql checks time: 00:01.617
+[2026-04-01 16:31:07] [ERROR] execute queries> ERROR: Could not resolve type StringLiteral (/home/caterpie/FuzzGen/output/python/gradio/queries/extract_signatures.ql:24,33-46)
+[2026-04-01 16:31:07] [ERROR] execute queries> ERROR: Could not resolve type StringLiteral (/home/caterpie/FuzzGen/output/python/gradio/queries/extract_signatures.ql:25,26-39)
+[2026-04-01 16:31:07] [ERROR] execute queries> ERROR: Non-monotonic recursion: formatTypeHint -!-> formatTypeHint (/home/caterpie/FuzzGen/output/python/gradio/queries/extract_signatures.ql:23,68-82)
+[2026-04-01 16:31:07] Sequence stamp origin is -5930165035096245669
+[2026-04-01 16:31:07] Pausing evaluation to close the cache at sequence stamp o+0
+[2026-04-01 16:31:07] The disk cache is freshly trimmed; leave it be.
+[2026-04-01 16:31:07] Unpausing evaluation
+[2026-04-01 16:31:07] Exiting with code 2

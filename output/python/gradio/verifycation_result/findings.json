@@ -1,0 +1,41 @@
+{
+    "finding": {
+        "rule_id": "py/full-ssrf",
+        "message": "The full URL of this request depends on a [user-provided value](1).\nThe full URL of this request depends on a [user-provided value](2).\nThe full URL of this request depends on a [user-provided value](3).\nThe full URL of this request depends on a [user-provided value](4).\nThe full URL of this request depends on a [user-provided value](5).\nThe full URL of this request depends on a [user-provided value](6).\nThe full URL of this request depends on a [user-provided value](7).\nThe full URL of this request depends on a [user-provided value](8).\nThe full URL of this request depends on a [user-provided value](9).\nThe full URL of this request depends on a [user-provided value](10).",
+        "file": "gradio/image_utils.py",
+        "start_line": 252,
+        "end_line": 252,
+        "repo_name": "gradio",
+        "lang": "python",
+        "sarif_path": "/home/trieudai/VulnHunterX/output/python/gradio/gradio.sarif",
+        "tool": "CodeQL",
+        "function_name": "extract_svg_content"
+    },
+    "verdict": "True Positive",
+    "confidence": "High",
+    "reasoning": "The extract_svg_content() function accepts user-controlled URLs and makes HTTP requests with no SSRF protections (no URL allowlisting, no internal IP blocking, no scheme restrictions). Gradio is a web framework handling user image uploads, making this a realistic attack vector for SSRF to access internal resources or cloud metadata.",
+    "answers": [
+        "Q1: Source is the `image_file` parameter to `extract_svg_content()` function (line 245). CodeQL has traced 10 user-provided paths to this function.",
+        "Q2: Flow: image_file (param, line 245) \u2192 str() conversion (line 248) \u2192 httpx.get() sink (line 252). Direct flow with no sanitization.",
+        "Q3: Only `is_http_url_like()` check (line 249) which detects URL format but performs NO security validation - no allowlisting, no internal IP blocking, no scheme restrictions.",
+        "Q4: Sink is `httpx.get(image_file)` on line 252 - makes full HTTP GET request to attacker-controlled URL.",
+        "Q5: SSRF - access internal network resources, cloud metadata (169.254.169.254), internal services, bypass firewalls.",
+        "Q6: Function is standalone utility; `preprocess_image()` in same file doesn't call it. But Gradio IS a web framework - user image uploads likely route through this.",
+        "Q7: No - core library code in `gradio/image_utils.py`, documented production function."
+    ],
+    "context_needed": [
+        "callers of extract_svg_content in Gradio codebase",
+        "is_http_url_like implementation"
+    ],
+    "iterations": 1,
+    "model": "glm-5",
+    "timestamp": "2026-03-17T12:57:55.413947",
+    "elapsed_seconds": 100.07828664779663,
+    "fp_pattern_matched": null,
+    "severity": "High",
+    "trust_boundary_crossed": true,
+    "attacker_controlled_source": true,
+    "sink_type": "open_read",
+    "source_trace": "user-provided value \u2192 extract_svg_content(image_file, line 245) \u2192 str(image_file, line 248) \u2192 httpx.get(image_file, line 252)",
+    "mitigations_present": []
+}

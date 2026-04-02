@@ -1,0 +1,17 @@
+{
+  "finding": {
+    "repo_name": "file-server",
+    "lang": "python",
+    "rule_id": "py/path-injection",
+    "function_name": "read_user_file",
+    "file": "server/file_handler.py",
+    "message": "User-controlled filename is passed to open() without path traversal validation.",
+    "answers": [
+      "filename",
+      "filename is joined with base directory via os.path.join() without stripping ../ sequences.",
+      "os.path.join does not prevent traversal if filename starts with / or contains ../.",
+      "open() is the sink receiving the potentially traversed path.",
+      "Attacker supplies ../../etc/passwd to read arbitrary system files."
+    ]
+  }
+}

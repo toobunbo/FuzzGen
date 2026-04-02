@@ -1,0 +1,74 @@
+import json
+import os
+from pathlib import Path
+from jinja2 import Environment, FileSystemLoader
+from .import_resolver import resolve_import
+
+TEMPLATE_BUILTINS = {"re", "sys", "atheris"}
+
+
+def build_skeleton(finding: dict, spec: dict, repo_root: str) -> str:
+    f = finding["finding"]
+    meta     = spec.get("_meta", {})
+    monitor  = spec.get("monitor", {})
+    oracle   = spec.get("oracle_check", {})
+    fuzz     = spec.get("fuzz_guidance", {})           # ← thêm
+
+    rule_id            = f.get("rule_id", "Unknown")
+    function_name      = meta.get("function", "")
+    file_path          = meta.get("file", "")
+    input_strategy     = meta.get("input_strategy", "direct_params")
+    monitor_strategy   = monitor.get("strategy", "inspect_return")
+    function_signature = meta.get("function_signature", "")
+
+    # Resolve import — normalize to list
+    raw_import   = resolve_import(file_path, function_name, repo_root)
+    import_stmts = raw_import if isinstance(raw_import, list) else [raw_import]
+
+    # Extra imports — skip builtins already in template
+    extra_imports = []
+    for m in monitor.get("additional_imports", []):
+        if m.strip() not in TEMPLATE_BUILTINS:
+            extra_imports.append(f"import {m}")
+    if monitor_strategy == "patch_call":
+        extra_imports.append("from unittest.mock import patch, MagicMock")
+
+    # Normalize spec fields — always pass native types, never pre-serialized strings
+    trigger_patterns = oracle.get("trigger_patterns", [])
+    if isinstance(trigger_patterns, str):
+        trigger_patterns = json.loads(trigger_patterns)
+
+    tainted_params = meta.get("tainted_params", [])
+    if isinstance(tainted_params, str):
+        tainted_params = json.loads(tainted_params)
+
+    seed_corpus = fuzz.get("seed_corpus", [])          # ← thêm
+    if isinstance(seed_corpus, str):
+        seed_corpus = json.loads(seed_corpus)
+
+    # Render
+    templates_dir = Path(__file__).parent / "templates"
+    env = Environment(loader=FileSystemLoader(str(templates_dir)))
+    env.filters["tojson"] = lambda v: json.dumps(v, ensure_ascii=False)  # ← fix \u003c escaping
+    template = env.get_template("base_harness.j2")
+
+    return template.render(
+        rule_id            = rule_id,
+        function_name      = function_name,
+        file_path          = file_path,
+        extra_imports      = extra_imports,
+        import_stmts       = import_stmts,
+        input_strategy     = input_strategy,
+        monitor_strategy   = monitor_strategy,
+        patch_target       = monitor.get("patch_target"),
+        target_arg_index   = monitor.get("target_arg_index"),   # ← thêm
+        target_arg_name    = monitor.get("target_arg_name"),    # ← thêm
+        capture_what       = monitor.get("capture_what"),
+        condition_desc     = oracle.get("condition_description", ""),
+        tainted_params     = tainted_params,
+        trigger_patterns   = trigger_patterns,
+        raise_message      = oracle.get("raise_message_template", ""),
+        function_signature = function_signature,
+        skip_condition     = fuzz.get("skip_condition", "False"),  # ← thêm
+        seed_corpus        = seed_corpus,                          # ← thêm
+    )

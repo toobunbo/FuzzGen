@@ -1,0 +1,7 @@
+harness_out: test_output/TC-04/harness_py_ssrf.py
+max_tokens: 4096
+model: ollama/deepseek-r1:7b
+prompts_dir: src/prompts
+repo_root: test_case/
+temperature: 0.15
+timeout: 120

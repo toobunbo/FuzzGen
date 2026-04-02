@@ -1,0 +1,10 @@
+[2026-04-01 15:28:56] This is codeql query run --database /home/caterpie/ProjectFzz/VulnHunterX-main/output/python/gradio/database --output /home/caterpie/ProjectFzz/VulnHunterX-main/output/python/gradio/context/classes.bqrs -- /home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python/classes.ql
+[2026-04-01 15:28:56] Log file was started late.
+[2026-04-01 15:28:56] Calling plumbing command: codeql resolve ram --dataset=/home/caterpie/ProjectFzz/VulnHunterX-main/output/python/gradio/database/db-python --format=json
+[2026-04-01 15:28:56] [WARN] resolve ram> Stingpool size measured as 19956138
+[2026-04-01 15:28:56] Plumbing command codeql resolve ram completed:
+                      [
+                        "-J-Xmx1134M"
+                      ]
+[2026-04-01 15:28:56] Chaining via /tmp/codeql.B5DBwKwU to plumbing: execute queries -J-Xmx1134M --verbosity=progress --logdir=/home/caterpie/ProjectFzz/VulnHunterX-main/output/python/gradio/database/log --evaluator-log-level=5 --warnings=show --qlconfig-file=/home/caterpie/ProjectFzz/VulnHunterX-main/qlconfig.yml --output=/home/caterpie/ProjectFzz/VulnHunterX-main/output/python/gradio/context/classes.bqrs -- /home/caterpie/ProjectFzz/VulnHunterX-main/output/python/gradio/database/db-python path:/home/caterpie/ProjectFzz/VulnHunterX-main/config/queries/tools/python/classes.ql
+[2026-04-01 15:28:56] Exiting with code 70

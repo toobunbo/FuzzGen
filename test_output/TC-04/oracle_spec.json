@@ -1,0 +1,39 @@
+{
+  "oracle_type": "inspect_return",
+  "attack_scenario": "Attacker supplies http://169.254.169.254/latest/meta-data/ to access cloud metadata.",
+  "tainted_params": [
+    {
+      "name": "url",
+      "index": 0,
+      "type": "str"
+    }
+  ],
+  "monitor": {
+    "strategy": "inspect_return",
+    "patch_target": null,
+    "capture_what": "requests.get()",
+    "additional_imports": [
+      "requests"
+    ]
+  },
+  "oracle_check": {
+    "condition_description": "The returned URL contains http://169.254.169.254/latest/meta-data/ indicating a malicious request.",
+    "trigger_patterns": [
+      "http://169.254.169.254/latest/meta-data/"
+    ],
+    "raise_type": "RuntimeError",
+    "raise_message_template": "SSRF Vulnerability: Malicious URL detected."
+  },
+  "expected_exceptions": [
+    "requests.exceptions.SSLError"
+  ],
+  "cleanup_needed": true,
+  "cleanup_description": "Restore the captured response and close the connection.",
+  "_meta": {
+    "function": "fetch_url_view",
+    "file": "proxy/views.py",
+    "input_strategy": "direct_params",
+    "function_signature": "def fetch_url_view()",
+    "model": "ollama/deepseek-r1:7b"
+  }
+}
