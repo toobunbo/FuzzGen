@@ -6,6 +6,9 @@
 import atheris
 import sys
 import re
+{% if monitor_strategy == "patch_call" %}
+from unittest.mock import patch, MagicMock
+{% endif %}
 {% for imp in extra_imports %}
 {{ imp }}
 {% endfor %}
@@ -34,13 +37,66 @@ _TAINTED_PARAMS = {{ tainted_params | tojson }}
 # condition        : {{ condition_desc }}
 # capture_what     : {{ capture_what }}
 # skip_hint        : {{ skip_condition }}
-# seed_corpus      : {{ seed_corpus | tojson }}
 # ========================================
+
+{% if monitor_strategy == "patch_call" %}
+# === PATCH_CALL SKELETON ===
+# 1. INPUT GENERATION
+#    - Generate inputs for all tainted params using FuzzedDataProvider.
+#    - Use ConsumeUnicodeNoSurrogates for str, ConsumeBytes for bytes.
+#    - Mix seed corpus with fuzz-generated inputs via ConsumeBool().
+#    - Seed corpus must be derived from trigger_patterns and condition_desc.
+#
+# 2. SKIP CONDITION
+#    - Apply skip_hint early, return immediately if not met.
+#
+# 3. MOCK SETUP
+#    - Patch `{{ patch_target }}` using `with patch(...) as mock_get:`.
+#    - Return a realistic MagicMock so the function continues past the patched call.
+#
+# 4. ORACLE CHECK
+#    - After the call, iterate mock_get.call_args_list.
+#    - For each call: check call.args[{{ target_arg_index }}] first,
+#      fall back to call.kwargs.get("{{ target_arg_name }}").
+#    - Match against every pattern in _COMPILED_PATTERNS.
+#    - On match → raise RuntimeError(_RAISE_MESSAGE)
+#
+# 5. EXCEPTION HANDLING
+#    - except RuntimeError: raise   → never swallow oracle signals
+#    - except Exception:    pass    → swallow only non-oracle exceptions
+# ==========================================
+{% elif monitor_strategy == "inspect_return" %}
+# === INSPECT_RETURN SKELETON ===
+# 1. INPUT GENERATION
+#    - Generate inputs for all tainted params using FuzzedDataProvider.
+#    - Use ConsumeUnicodeNoSurrogates for str, ConsumeBytes for bytes.
+#    - Mix seed corpus with fuzz-generated inputs via ConsumeBool().
+#    - Seed corpus entries must be BYPASS ATTEMPTS, not plain payloads.
+#
+# 2. SKIP CONDITION
+#    - Apply skip_hint early, return immediately if not met.
+#
+# 3. FUNCTION CALL
+#    - No mocking needed. Call target function directly.
+#    - Wrap in try/except Exception: pass — return early if it raises.
+#
+# 4. RETURN VALUE HANDLING
+#    - If return value is None or not str → return early.
+#    - captured = return value (per capture_what: {{ capture_what }})
+#
+# 5. ORACLE CHECK  ← must be OUTSIDE the try/except above
+#    - Match captured against every pattern in _COMPILED_PATTERNS.
+#    - On match → raise RuntimeError(_RAISE_MESSAGE)
+#
+# 6. EXCEPTION HANDLING
+#    - except RuntimeError: raise   → never swallow oracle signals
+#    - except Exception:    pass    → only around the function call
+# ==========================================
+{% endif %}
 
 def TestOneInput(data):
     fdp = atheris.FuzzedDataProvider(data)
+    # [FILL HERE — follow the skeleton above]
 
-
-if __name__ == "__main__":
-    atheris.Setup(sys.argv, TestOneInput)
-    atheris.Fuzz()
+atheris.Setup(sys.argv, TestOneInput)
+atheris.Fuzz()
