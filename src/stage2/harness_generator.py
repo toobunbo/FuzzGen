@@ -42,7 +42,14 @@ def run(finding_path: str, spec_path: str,
 
     # 2. Load prompts
     prompts_dir = config["prompts_dir"]
-    system_p  = Path(prompts_dir, "stage2_system.txt").read_text(encoding="utf-8")
+
+    strategy = spec.get("monitor", {}).get("strategy", "inspect_return")
+    if strategy == "patch_call":
+        system_file = "stage2_system_patchcall.txt"
+    else:
+        system_file = "stage2_system_inspectreturn.txt"
+
+    system_p  = Path(prompts_dir, system_file).read_text(encoding="utf-8")
     user_tmpl = Path(prompts_dir, "stage2_user.txt").read_text(encoding="utf-8")
     user_p    = user_tmpl.format(skeleton=skeleton)
 
