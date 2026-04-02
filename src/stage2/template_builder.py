@@ -9,10 +9,10 @@ TEMPLATE_BUILTINS = {"re", "sys", "atheris"}
 
 def build_skeleton(finding: dict, spec: dict, repo_root: str) -> str:
     f = finding["finding"]
-    meta     = spec.get("_meta", {})
-    monitor  = spec.get("monitor", {})
-    oracle   = spec.get("oracle_check", {})
-    fuzz     = spec.get("fuzz_guidance", {})           # ← thêm
+    meta   = spec.get("_meta", {})
+    monitor = spec.get("monitor", {})
+    oracle  = spec.get("oracle_check", {})
+    fuzz    = spec.get("fuzz_guidance", {})
 
     rule_id            = f.get("rule_id", "Unknown")
     function_name      = meta.get("function", "")
@@ -21,19 +21,17 @@ def build_skeleton(finding: dict, spec: dict, repo_root: str) -> str:
     monitor_strategy   = monitor.get("strategy", "inspect_return")
     function_signature = meta.get("function_signature", "")
 
-    # Resolve import — normalize to list
+    # Resolve import
     raw_import   = resolve_import(file_path, function_name, repo_root)
     import_stmts = raw_import if isinstance(raw_import, list) else [raw_import]
 
-    # Extra imports — skip builtins already in template
+    # Extra imports — skip builtins, template handles unittest.mock
     extra_imports = []
     for m in monitor.get("additional_imports", []):
         if m.strip() not in TEMPLATE_BUILTINS:
             extra_imports.append(f"import {m}")
-    if monitor_strategy == "patch_call":
-        extra_imports.append("from unittest.mock import patch, MagicMock")
 
-    # Normalize spec fields — always pass native types, never pre-serialized strings
+    # Normalize spec fields
     trigger_patterns = oracle.get("trigger_patterns", [])
     if isinstance(trigger_patterns, str):
         trigger_patterns = json.loads(trigger_patterns)
@@ -42,14 +40,10 @@ def build_skeleton(finding: dict, spec: dict, repo_root: str) -> str:
     if isinstance(tainted_params, str):
         tainted_params = json.loads(tainted_params)
 
-    seed_corpus = fuzz.get("seed_corpus", [])          # ← thêm
-    if isinstance(seed_corpus, str):
-        seed_corpus = json.loads(seed_corpus)
-
     # Render
     templates_dir = Path(__file__).parent / "templates"
     env = Environment(loader=FileSystemLoader(str(templates_dir)))
-    env.filters["tojson"] = lambda v: json.dumps(v, ensure_ascii=False)  # ← fix \u003c escaping
+    env.filters["tojson"] = lambda v: json.dumps(v, ensure_ascii=False)
     template = env.get_template("base_harness.j2")
 
     return template.render(
@@ -61,14 +55,13 @@ def build_skeleton(finding: dict, spec: dict, repo_root: str) -> str:
         input_strategy     = input_strategy,
         monitor_strategy   = monitor_strategy,
         patch_target       = monitor.get("patch_target"),
-        target_arg_index   = monitor.get("target_arg_index"),   # ← thêm
-        target_arg_name    = monitor.get("target_arg_name"),    # ← thêm
+        target_arg_index   = monitor.get("target_arg_index"),
+        target_arg_name    = monitor.get("target_arg_name"),
         capture_what       = monitor.get("capture_what"),
         condition_desc     = oracle.get("condition_description", ""),
         tainted_params     = tainted_params,
         trigger_patterns   = trigger_patterns,
         raise_message      = oracle.get("raise_message_template", ""),
         function_signature = function_signature,
-        skip_condition     = fuzz.get("skip_condition", "False"),  # ← thêm
-        seed_corpus        = seed_corpus,                          # ← thêm
+        skip_condition     = fuzz.get("skip_condition", "False"),
     )
